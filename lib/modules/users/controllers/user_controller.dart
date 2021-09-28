@@ -55,5 +55,20 @@ class UserController {
     }
   }
 
+  @Route.get('/<userId|[0-9]+>/categories')
+  Future<Response> findCategoriesByUserId(
+      Request request, String userId) async {
+    final categories = await service.findCategoriesByUserId(int.parse(userId));
+    final categoriesResponse = categories
+        .map((c) => {
+              'id_categoria': c.id,
+              'descricao': c.description,
+              'codigo_icone': c.iconCode,
+              'codigo_cor': c.colorCode,
+            })
+        .toList();
+    return Response.ok(jsonEncode(categoriesResponse));
+  }
+
   Router get router => _$UserControllerRouter(this);
 }

@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
@@ -28,4 +29,8 @@ class UserService implements IUserService {
   Future<void> updateUserNameById(
           int userId, UserUpdateNameInputModel userUpdateNameInputModel) =>
       repository.updateUserNameById(userId, userUpdateNameInputModel.name);
+
+  @override
+  Future<List<Category>> findCategoriesByUserId(int userId) =>
+      repository.findCategoriesByUserId(userId);
 }

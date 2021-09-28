@@ -24,8 +24,8 @@ class CategoryRepository implements ICategoryRepository {
           insert into categoria (descricao, codigo_icone, codigo_cor, id_usuario) values (?,?,?,?)
       ''', [
         categorySaveInputModel.description,
-        categorySaveInputModel.icon,
-        categorySaveInputModel.color,
+        categorySaveInputModel.iconCode,
+        categorySaveInputModel.colorCode,
         categorySaveInputModel.userId
       ]);
 

@@ -23,8 +23,8 @@ class CategoryController {
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final categorySaveInputModel = CategorySaveInputModel(
           description: dataRequest['descricao'].toString(),
-          icon: int.parse(dataRequest['codigo_icone'].toString()),
-          color: int.parse(dataRequest['codigo_cor'].toString()),
+          iconCode: int.parse(dataRequest['codigo_icone'].toString()),
+          colorCode: int.parse(dataRequest['codigo_cor'].toString()),
           userId: int.parse(dataRequest['id_usuario'].toString()));
 
       final categoryId = await service.createCategory(categorySaveInputModel);
@@ -37,6 +37,7 @@ class CategoryController {
           body: {'message': 'Erro ao cadastrar categoria'});
     }
   }
+
 
   Router get router => _$CategoryControllerRouter(this);
 }

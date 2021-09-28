@@ -28,8 +28,8 @@ void main() {
       const categoryId = 1;
       final categorySaveInputModel = CategorySaveInputModel(
           description: 'Supermercado',
-          icon: 59553,
-          color: 4278190080,
+          iconCode: 59553,
+          colorCode: 4278190080,
           userId: 1);
       final mockResults = MockResults();
       when(() => mockResults.insertId).thenReturn(1);
@@ -46,8 +46,8 @@ void main() {
       // Arrange
       final categorySaveInputModel = CategorySaveInputModel(
           description: 'Supermercado',
-          icon: 59553,
-          color: 4278190080,
+          iconCode: 59553,
+          colorCode: 4278190080,
           userId: 1);
       final exception = MockMysqlException();
       database.mockQueryException(mockException: exception);

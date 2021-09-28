@@ -1,3 +1,4 @@
+import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 
 abstract class IUserRepository {
@@ -8,4 +9,6 @@ abstract class IUserRepository {
   Future<User> findById(int id);
 
   Future<void> updateUserNameById(int userId, String name);
+
+  Future<List<Category>> findCategoriesByUserId(int userId);
 }

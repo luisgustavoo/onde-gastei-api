@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:onde_gastei_api/application/database/i_database_connection.dart';
+import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/exceptions/database_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
@@ -115,6 +116,45 @@ class UserRepository implements IUserRepository {
       ''', [name, userId]);
     } on MySqlException catch (e, s) {
       log.error('Erro ao atualizar nome do usuario $userId', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<List<Category>> findCategoriesByUserId(int userId) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      final result = await conn.query('''
+        SELECT 
+            id_categoria,
+            descricao,
+            codigo_icone,
+            codigo_cor,
+            id_usuario
+        FROM
+            categoria
+        WHERE
+            id_usuario = ?      
+      ''', [userId]);
+
+      if (result.isNotEmpty) {
+        return result
+            .map((c) => Category(
+                id: int.parse(c['id_categoria'].toString()),
+                description: c['descricao'].toString(),
+                iconCode: int.parse(c['codigo_icone'].toString()),
+                colorCode: int.parse(c['codigo_cor'].toString()),
+                userId: userId))
+            .toList();
+      }
+
+      return <Category>[];
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao buscar categorias do usuario $userId', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();
