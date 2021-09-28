@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/entities/user.dart';
-import 'package:onde_gastei_api/modules/user/data/i_user_repository.dart';
-import 'package:onde_gastei_api/modules/user/services/i_user_service.dart';
-import 'package:onde_gastei_api/modules/user/view_model/user_login_input_model.dart';
-import 'package:onde_gastei_api/modules/user/view_model/user_save_input_model.dart';
-import 'package:onde_gastei_api/modules/user/view_model/user_update_name_input_model.dart';
+import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
+import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_update_name_input_model.dart';
 
 @LazySingleton(as: IUserService)
 class UserService implements IUserService {

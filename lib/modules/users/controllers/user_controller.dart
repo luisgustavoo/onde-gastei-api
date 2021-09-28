@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
-import 'package:onde_gastei_api/modules/user/services/i_user_service.dart';
-import 'package:onde_gastei_api/modules/user/view_model/user_update_name_input_model.dart';
+import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_update_name_input_model.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -20,7 +20,7 @@ class UserController {
   @Route.get('/')
   Future<Response> findByToken(Request request) async {
     try {
-      final userId = int.parse(request.headers['user'].toString());
+      final userId = int.parse(request.headers['users'].toString());
 
       final user = await service.findById(userId);
 
@@ -38,7 +38,7 @@ class UserController {
   @Route.put('/<userId|[0-9]+>/update')
   Future<Response> updateUserNameById(Request request, String userId) async {
     try {
-      final userId = int.parse(request.headers['user'].toString());
+      final userId = int.parse(request.headers['users'].toString());
       final dataRequest =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final userUpdateNameInputModel =

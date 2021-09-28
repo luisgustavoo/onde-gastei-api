@@ -7,7 +7,7 @@ import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/helpers/cripty_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
-import 'package:onde_gastei_api/modules/user/data/i_user_repository.dart';
+import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
 
 @LazySingleton(as: IUserRepository)
 class UserRepository implements IUserRepository {

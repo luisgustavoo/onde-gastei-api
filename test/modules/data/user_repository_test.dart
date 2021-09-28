@@ -4,7 +4,7 @@ import 'package:onde_gastei_api/exceptions/database_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
-import 'package:onde_gastei_api/modules/user/data/user_repository.dart';
+import 'package:onde_gastei_api/modules/users/data/user_repository.dart';
 import 'package:test/test.dart';
 
 import '../../core/fixture/fixture_reader.dart';
@@ -25,7 +25,7 @@ void main() {
   });
 
   group('Group test createUser', () {
-    test('Should create user with success', () async {
+    test('Should create users with success', () async {
       // Arrange
       const userId = 1;
       const name = 'Luis Gustavo';

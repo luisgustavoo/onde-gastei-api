@@ -14,6 +14,9 @@
 # include: package:lints/recommended.yaml
 include: package:strict/analysis_options.yaml
 
+analyzer:
+  exclude: [ lib/**.g.dart, lib/**.config.dart ]
+
 # Uncomment the following section to specify additional rules.
 
 # linter:

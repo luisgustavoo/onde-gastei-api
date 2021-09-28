@@ -50,13 +50,13 @@ class SecurityMiddleware extends Middlewares {
       final userId = claimsMap['sub'].toString();
 
       final securityHeaders = <String, dynamic>{
-        'user': userId,
+        'users': userId,
         'access_token': authorizationToken,
       };
 
       return innerHandler(request.change(headers: securityHeaders));
-    } on Exception catch (e) {
-      print(e);
+    } on Exception catch (e, s) {
+      log.error('Erro ao criar security middleware', e, s);
       return Response.forbidden(jsonEncode(<String, dynamic>{}));
     }
   }

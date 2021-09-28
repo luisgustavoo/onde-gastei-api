@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/helpers/jwt_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
-import 'package:onde_gastei_api/modules/user/services/i_user_service.dart';
-import 'package:onde_gastei_api/modules/user/view_model/user_login_input_model.dart';
-import 'package:onde_gastei_api/modules/user/view_model/user_save_input_model.dart';
+import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 

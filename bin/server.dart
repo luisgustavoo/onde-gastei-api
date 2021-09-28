@@ -5,6 +5,7 @@ import 'package:onde_gastei_api/application/config/application_config.dart';
 import 'package:onde_gastei_api/application/middlewares/cors/cors_middlewares.dart';
 import 'package:onde_gastei_api/application/middlewares/default_content_type/default_content_type.dart';
 import 'package:onde_gastei_api/application/middlewares/security/security_middleware.dart';
+import 'package:onde_gastei_api/logs/log.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -31,5 +32,6 @@ Future<void> main(List<String> args) async {
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final server = await serve(_handler, ip, port);
-  print('Server listening on port ${server.port}');
+  Log().debug('Server listening on port ${server.port}');
+  //print('Server listening on port ${server.port}');
 }
