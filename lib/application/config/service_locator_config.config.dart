@@ -49,7 +49,7 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
   gh.factory<_i16.AuthController>(() => _i16.AuthController(
       service: get<_i13.IUserService>(), log: get<_i8.ILog>()));
   gh.factory<_i17.ExpensesController>(() => _i17.ExpensesController(
-      services: get<_i9.IExpenseServices>(), log: get<_i8.ILog>()));
+      service: get<_i9.IExpenseServices>(), log: get<_i8.ILog>()));
   gh.lazySingleton<_i18.ICategoryRepository>(() => _i19.CategoryRepository(
       connection: get<_i3.IDatabaseConnection>(), log: get<_i8.ILog>()));
   gh.lazySingleton<_i20.ICategoryService>(() => _i21.CategoryService(

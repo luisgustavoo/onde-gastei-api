@@ -9,6 +9,8 @@ part of 'expenses_controller.dart';
 Router _$ExpensesControllerRouter(ExpensesController service) {
   final router = Router();
   router.add('POST', r'/register', service.createExpense);
-  router.add('PUT', r'/<expenseId|[0-9]+>/update', service.deleteExpenseById);
+  router.add('PUT', r'/<expenseId|[0-9]+>/update', service.updateExpenseById);
+  router.add(
+      'DELETE', r'/<expenseId|[0-9]+>/delete', service.deleteExpenseById);
   return router;
 }

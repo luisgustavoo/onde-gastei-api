@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/expenses/services/i_expense_services.dart';
 import 'package:onde_gastei_api/modules/expenses/view_model/expense_save_input_model.dart';
+import 'package:onde_gastei_api/modules/expenses/view_model/expense_update_input_model.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -11,9 +12,9 @@ part 'expenses_controller.g.dart';
 
 @Injectable()
 class ExpensesController {
-  ExpensesController({required this.services, required this.log});
+  ExpensesController({required this.service, required this.log});
 
-  final IExpenseServices services;
+  final IExpenseServices service;
   final ILog log;
 
   @Route.post('/register')
@@ -29,7 +30,7 @@ class ExpensesController {
           userId: int.parse(requestData['id_usuario'].toString()),
           categoryId: int.parse(requestData['id_categoria'].toString()));
 
-      final expenseId = await services.createExpense(expenseSaveInputModel);
+      final expenseId = await service.createExpense(expenseSaveInputModel);
 
       return Response.ok(jsonEncode(
           {'message': 'Despesa criada com sucesso expenseId: $expenseId'}));
@@ -41,8 +42,42 @@ class ExpensesController {
   }
 
   @Route.put('/<expenseId|[0-9]+>/update')
-  Future<Response> deleteExpenseById(Request request) async {
-    return Response.ok(jsonEncode(''));
+  Future<Response> updateExpenseById(Request request, String expenseId) async {
+    try {
+      final requestData =
+          jsonDecode(await request.readAsString()) as Map<String, dynamic>;
+
+      final expenseUpdateInputModel = ExpenseUpdateInputModel(
+        description: requestData['descricao'].toString(),
+        value: double.parse(requestData['valor'].toString()),
+        date: DateTime.parse(requestData['data'].toString()),
+        categoryId: int.parse(requestData['id_categoria'].toString()),
+      );
+
+      await service.updateExpenseById(
+          int.parse(expenseId.toString()), expenseUpdateInputModel);
+
+      return Response.ok(
+          jsonEncode({'message': 'Despesa atualizada com sucesso'}));
+    } on Exception catch (e, s) {
+      log.error('Erro ao atualizar despesa', e, s);
+      return Response.internalServerError(
+          body: jsonEncode({'message': 'Erro ao atualizar despesa'}));
+    }
+  }
+
+  @Route.delete('/<expenseId|[0-9]+>/delete')
+  Future<Response> deleteExpenseById(Request request, String expenseId) async {
+    try {
+      await service.deleteExpenseById(int.parse(expenseId.toString()));
+
+      return Response.ok(
+          jsonEncode({'message': 'Despesa deletada com sucesso'}));
+    } on Exception catch (e, s) {
+      log.error('Erro ao deletar despesa', e, s);
+      return Response.internalServerError(
+          body: jsonEncode({'message': 'Erro ao deletar despesa'}));
+    }
   }
 
   Router get router => _$ExpensesControllerRouter(this);

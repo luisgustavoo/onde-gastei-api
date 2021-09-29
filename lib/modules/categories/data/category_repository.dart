@@ -22,7 +22,7 @@ class CategoryRepository implements ICategoryRepository {
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''
-          insert into categoria (descricao, codigo_icone, codigo_cor, id_usuario) values (?,?,?,?)
+          INSERT INTO categoria (descricao, codigo_icone, codigo_cor, id_usuario) VALUES (?,?,?,?)
       ''', [
         categorySaveInputModel.description,
         categorySaveInputModel.iconCode,
@@ -74,8 +74,11 @@ class CategoryRepository implements ICategoryRepository {
 
     try {
       conn = await connection.openConnection();
-      await conn.query(
-          '''delete from categoria where id_categoria = ?''', [categoryId]);
+      await conn.query('''
+            DELETE FROM categoria 
+            WHERE
+                id_categoria = ?          
+          ''', [categoryId]);
     } on MySqlException catch (e, s) {
       log.error('Erro ao deletar categoria $categoryId', e, s);
       throw DatabaseException();
