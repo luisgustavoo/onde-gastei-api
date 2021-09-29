@@ -9,6 +9,7 @@ import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/helpers/cripty_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 
 @LazySingleton(as: IUserRepository)
 class UserRepository implements IUserRepository {
@@ -126,7 +127,6 @@ class UserRepository implements IUserRepository {
   Future<List<Category>> findCategoriesByUserId(int userId) async {
     MySqlConnection? conn;
 
-
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''
@@ -156,6 +156,59 @@ class UserRepository implements IUserRepository {
       return <Category>[];
     } on MySqlException catch (e, s) {
       log.error('Erro ao buscar categorias do usuario $userId', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<List<UserExpenseByPeriodViewModel>> findExpenseByUserIdAndPeriod(
+      int userId, DateTime initialDate, DateTime finalDate) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      final result = await conn.query('''
+          SELECT 
+              d.id_despesa,
+              d.descricao,
+              d.valor,
+              d.data,
+              c.id_categoria,
+              c.descricao as descricao_categoria,
+              c.codigo_icone,
+              c.codigo_cor
+          FROM
+              despesa d
+                  INNER JOIN
+              categoria c ON (d.id_categoria = c.id_categoria)
+          WHERE
+              d.id_usuario = ?
+                  AND d.data BETWEEN ? AND ?      
+      
+      ''',
+          [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
+
+      if (result.isNotEmpty) {
+        return result
+            .map((d) => UserExpenseByPeriodViewModel(
+                expenseId: int.parse(d['id_despesa'].toString()),
+                description: d['descricao'].toString(),
+                value: double.parse(d['valor'].toString()),
+                date: DateTime.parse(d['data'].toString()),
+                category: Category(
+                  id: int.parse(d['id_categoria'].toString()),
+                  description: d['descricao_categoria'].toString(),
+                  iconCode: int.parse(d['codigo_icone'].toString()),
+                  colorCode: int.parse(d['codigo_cor'].toString()),
+                )))
+            .toList();
+      }
+
+      return <UserExpenseByPeriodViewModel>[];
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao buscar despesas por período', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();

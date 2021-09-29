@@ -70,6 +70,40 @@ class UserController {
     return Response.ok(jsonEncode(categoriesResponse));
   }
 
+  @Route.get('/<userId|[0-9]+>/categories/')
+  Future<Response> findExpenseByUserIdAndPeriod(
+      Request request, String userId) async {
+    try {
+      final initialDate =
+          DateTime.parse(request.url.queryParameters['datainicial'].toString());
+      final finalDate =
+          DateTime.parse(request.url.queryParameters['datafinal'].toString());
+
+      final expenses = await service.findExpenseByUserIdAndPeriod(
+          int.parse(userId.toString()), initialDate, finalDate);
+
+      final expensesResponse = expenses
+          .map((d) => {
+                'id_despesa': d.expenseId,
+                'descricao': d.description,
+                'valor': d.value,
+                'data': d.date.toIso8601String(),
+                'categoria': {
+                  'id_categoria': d.category.id,
+                  'descricao_categoria': d.category.description,
+                  'codigo_icone': d.category.iconCode,
+                  'codigo_cor': d.category.colorCode,
+                }
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(expensesResponse));
+    } on Exception catch (e, s) {
+      log.error('Erro ao buscar despesas por período', e, s);
+      return Response.internalServerError(
+          body: {'message': 'Não foi possível buscar despesas por período'});
+    }
+  }
 
   Router get router => _$UserControllerRouter(this);
 }

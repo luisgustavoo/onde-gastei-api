@@ -3,6 +3,7 @@ import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_update_name_input_model.dart';
@@ -33,4 +34,9 @@ class UserService implements IUserService {
   @override
   Future<List<Category>> findCategoriesByUserId(int userId) =>
       repository.findCategoriesByUserId(userId);
+
+  @override
+  Future<List<UserExpenseByPeriodViewModel>> findExpenseByUserIdAndPeriod(
+          int userId, DateTime initialDate, DateTime finalDate) =>
+      repository.findExpenseByUserIdAndPeriod(userId, initialDate, finalDate);
 }

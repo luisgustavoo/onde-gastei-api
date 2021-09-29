@@ -32,8 +32,8 @@ class MockResults extends Mock implements Results {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  Iterable<Category> map<Category>(
-      Category Function(ResultRow e) toElement) sync* {
+  Iterable<T> map<T>(
+      T Function(ResultRow e) toElement) sync* {
     for (final value in this) {
       yield toElement(value);
     }

@@ -5,11 +5,10 @@ import 'package:onde_gastei_api/modules/categories/data/category_repository.dart
 import 'package:onde_gastei_api/modules/categories/view_model/category_save_input_model.dart';
 import 'package:test/test.dart';
 
-import '../../core/log/mock_logger.dart';
-import '../../core/mysql/mock_database_connection.dart';
-
-import '../../core/mysql/mock_mysql_exception.dart';
-import '../../core/mysql/mock_results.dart';
+import '../../../core/log/mock_logger.dart';
+import '../../../core/mysql/mock_database_connection.dart';
+import '../../../core/mysql/mock_mysql_exception.dart';
+import '../../../core/mysql/mock_results.dart';
 
 void main() {
   late MockDatabaseConnection database;
@@ -40,6 +39,7 @@ void main() {
 
       //Assert
       expect(category, categoryId);
+      database.verifyConnectionClose();
     });
 
     test('Should throws DatabaseException', () async {
@@ -56,6 +56,8 @@ void main() {
 
       //Assert
       expect(call(categorySaveInputModel), throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
     });
   });
 }

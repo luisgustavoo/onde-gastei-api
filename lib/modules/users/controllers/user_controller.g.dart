@@ -12,5 +12,7 @@ Router _$UserControllerRouter(UserController service) {
   router.add('PUT', r'/<userId|[0-9]+>/update', service.updateUserNameById);
   router.add(
       'GET', r'/<userId|[0-9]+>/categories', service.findCategoriesByUserId);
+  router.add('GET', r'/<userId|[0-9]+>/categories/',
+      service.findExpenseByUserIdAndPeriod);
   return router;
 }

@@ -6,6 +6,7 @@ import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/user_repository.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 import 'package:test/test.dart';
 
 import '../../core/fixture/fixture_reader.dart';
@@ -86,7 +87,7 @@ void main() {
           name: 'Luis Gustavo',
           email: 'luisgustavovieirasantos@gmail.com');
       final jsonData = FixtureReader.getJsonData(
-          'modules/data/fixture/login_with_email_password_success.json');
+          'modules/users/data/fixture/login_with_email_password_success.json');
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
 
@@ -95,6 +96,7 @@ void main() {
 
       //Assert
       expect(user, userExpect);
+      database.verifyConnectionClose();
     });
 
     test('Should throw DatabaseException', () async {
@@ -108,6 +110,8 @@ void main() {
 
       //Assert
       expect(call(name, email), throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
     });
 
     test('Should throw UserNotFoundException', () async {
@@ -122,6 +126,8 @@ void main() {
 
       //Assert
       expect(call(name, email), throwsA(isA<UserNotFoundException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
     });
   });
 
@@ -134,7 +140,7 @@ void main() {
           name: 'Luis Gustavo',
           email: 'luisgustavovieirasantos@gmail.com');
       final jsonData = FixtureReader.getJsonData(
-          'modules/data/fixture/find_by_id_success.json');
+          'modules/users/data/fixture/find_by_id_success.json');
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
 
@@ -143,6 +149,7 @@ void main() {
 
       //Assert
       expect(user, userExpect);
+      database.verifyConnectionClose();
     });
 
     test('Should throws DatabaseException', () async {
@@ -155,6 +162,8 @@ void main() {
 
       //Assert
       expect(call(userId), throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
     });
 
     test('Should throws DatabaseException', () async {
@@ -168,6 +177,8 @@ void main() {
 
       //Assert
       expect(call(userId), throwsA(isA<UserNotFoundException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
     });
   });
 
@@ -176,7 +187,7 @@ void main() {
       // Arrange
       const userId = 1;
       final jsonData = FixtureReader.getJsonData(
-          'modules/data/fixture/find_categories_by_user_id_success.json');
+          'modules/users/data/fixture/find_categories_by_user_id_success.json');
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
       final categoriesExpect = <Category>[
@@ -193,6 +204,7 @@ void main() {
 
       //Assert
       expect(categories, categoriesExpect);
+      database.verifyConnectionClose();
     });
 
     test('Should categories list empty', () async {
@@ -205,6 +217,7 @@ void main() {
 
       //Assert
       expect(categories, <Category>[]);
+      database.verifyConnectionClose();
     });
 
     test('Should throws DatabaseException', () async {
@@ -217,6 +230,72 @@ void main() {
 
       //Assert
       expect(call(userId), throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
+    });
+  });
+
+  group('group test findExpenseByUserIdAndPeriod', () {
+    test('Should expenses by user id and period success', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final expensesExpected = UserExpenseByPeriodViewModel(
+          expenseId: 1,
+          description: 'Compra no supermercado',
+          value: 150.5,
+          date: DateTime.parse('2021-09-28T00:00:00.000Z'),
+          category: Category(
+              id: 2,
+              description: 'Supermercado',
+              iconCode: 59553,
+              colorCode: 4293128957));
+
+      final jsonData = FixtureReader.getJsonData(
+          'modules/users/data/fixture/find_expense_by_userid_and_period.json');
+      final mockResults = MockResults(jsonData);
+      database.mockQuery(mockResults);
+
+      //Act
+      final expense = await userRepository.findExpenseByUserIdAndPeriod(
+          userId, initialDate, finalDate);
+      //Assert
+      expect(expense[0], expensesExpected);
+      expect(expense[0], isA<UserExpenseByPeriodViewModel>());
+      database.verifyConnectionClose();
+    });
+
+    test('Should expenses list empty', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final mockResults = MockResults();
+      database.mockQuery(mockResults);
+      //Act
+      final expense = await userRepository.findExpenseByUserIdAndPeriod(
+          userId, initialDate, finalDate);
+
+      //Assert
+      expect(expense, <UserExpenseByPeriodViewModel>[]);
+      database.verifyConnectionClose();
+    });
+
+    test('Should throws DatabaseException', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      database.mockQueryException(mockException: MockMysqlException());
+
+      //Act
+      final call = userRepository.findExpenseByUserIdAndPeriod;
+
+      //Assert
+      expect(call(userId, initialDate, finalDate), throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
     });
   });
 }
