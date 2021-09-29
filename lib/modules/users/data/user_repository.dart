@@ -126,6 +126,7 @@ class UserRepository implements IUserRepository {
   Future<List<Category>> findCategoriesByUserId(int userId) async {
     MySqlConnection? conn;
 
+
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''

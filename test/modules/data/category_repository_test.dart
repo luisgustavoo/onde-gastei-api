@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 import '../../core/log/mock_logger.dart';
 import '../../core/mysql/mock_database_connection.dart';
-import '../../core/mysql/mock_mysql_connection.dart';
+
 import '../../core/mysql/mock_mysql_exception.dart';
 import '../../core/mysql/mock_results.dart';
 

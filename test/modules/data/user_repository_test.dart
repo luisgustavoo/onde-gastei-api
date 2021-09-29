@@ -1,4 +1,5 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/exceptions/database_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
@@ -167,6 +168,55 @@ void main() {
 
       //Assert
       expect(call(userId), throwsA(isA<UserNotFoundException>()));
+    });
+  });
+
+  group('Group test findCategoriesByUserId', () {
+    test('Should find categories with success', () async {
+      // Arrange
+      const userId = 1;
+      final jsonData = FixtureReader.getJsonData(
+          'modules/data/fixture/find_categories_by_user_id_success.json');
+      final mockResults = MockResults(jsonData);
+      database.mockQuery(mockResults);
+      final categoriesExpect = <Category>[
+        Category(
+            id: 1,
+            description: 'Supermercado',
+            iconCode: 59553,
+            colorCode: 4278190080,
+            userId: userId),
+      ];
+
+      //Act
+      final categories = await userRepository.findCategoriesByUserId(userId);
+
+      //Assert
+      expect(categories, categoriesExpect);
+    });
+
+    test('Should categories list empty', () async {
+      // Arrange
+      const userId = 1;
+      final mockResults = MockResults();
+      database.mockQuery(mockResults);
+      //Act
+      final categories = await userRepository.findCategoriesByUserId(userId);
+
+      //Assert
+      expect(categories, <Category>[]);
+    });
+
+    test('Should throws DatabaseException', () async {
+      // Arrange
+      const userId = 1;
+      database.mockQueryException(mockException: MockMysqlException());
+
+      //Act
+      final call = userRepository.findCategoriesByUserId;
+
+      //Assert
+      expect(call(userId), throwsA(isA<DatabaseException>()));
     });
   });
 }

@@ -70,5 +70,6 @@ class UserController {
     return Response.ok(jsonEncode(categoriesResponse));
   }
 
+
   Router get router => _$UserControllerRouter(this);
 }
