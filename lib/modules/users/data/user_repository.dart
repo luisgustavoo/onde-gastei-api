@@ -10,6 +10,7 @@ import 'package:onde_gastei_api/helpers/cripty_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
 
 @LazySingleton(as: IUserRepository)
 class UserRepository implements IUserRepository {
@@ -209,6 +210,47 @@ class UserRepository implements IUserRepository {
       return <UserExpenseByPeriodViewModel>[];
     } on MySqlException catch (e, s) {
       log.error('Erro ao buscar despesas por período', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<List<UserExpensesByCategoriesViewModel>> findExpensesByCategories(
+      int userId, DateTime initialDate, DateTime finalDate) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      final result = await conn.query('''
+          SELECT 
+              c.id_categoria, c.descricao, SUM(d.valor) AS valor_total
+          FROM
+              despesa d
+                  INNER JOIN
+              categoria c ON (d.id_categoria = c.id_categoria)
+          WHERE
+              d.id_usuario = ?
+                  AND d.data BETWEEN ? AND ?
+          GROUP BY c.id_categoria , c.descricao
+          ORDER BY valor_total DESC  
+      
+      ''',
+          [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
+
+      if (result.isNotEmpty) {
+        return result
+            .map((d) => UserExpensesByCategoriesViewModel(
+                categoryId: int.parse(d['id_categoria'].toString()),
+                description: d['descricao'].toString(),
+                totalValue: double.parse(d['valor_total'].toString())))
+            .toList();
+      }
+
+      return <UserExpensesByCategoriesViewModel>[];
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao buscar despesas por categorias', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();

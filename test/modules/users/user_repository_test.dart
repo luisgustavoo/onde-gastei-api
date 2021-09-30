@@ -7,6 +7,7 @@ import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/user_repository.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
 import 'package:test/test.dart';
 
 import '../../core/fixture/fixture_reader.dart';
@@ -293,9 +294,64 @@ void main() {
       final call = userRepository.findExpenseByUserIdAndPeriod;
 
       //Assert
-      expect(call(userId, initialDate, finalDate), throwsA(isA<DatabaseException>()));
+      expect(call(userId, initialDate, finalDate),
+          throwsA(isA<DatabaseException>()));
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
+  });
+
+  group('Group test findExpensesByCategories', () {
+    test('Should return expenses by categories success', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final expenseByCategoriesExpected = UserExpensesByCategoriesViewModel(
+          categoryId: 1, description: 'Supermercado', totalValue: 15.5);
+      final jsonData = FixtureReader.getJsonData(
+          'modules/users/data/fixture/find_expense_by_categories_success.json');
+      final mockResults = MockResults(jsonData);
+      database.mockQuery(mockResults);
+      //Act
+      final expenseByCategories = await userRepository.findExpensesByCategories(
+          userId, initialDate, finalDate);
+
+      //Assert
+      expect(expenseByCategories[0], expenseByCategoriesExpected);
+    });
+
+    test('Should return expenses by categories empty', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final mockResults = MockResults();
+      database.mockQuery(mockResults);
+      //Act
+      final expenseByCategories = await userRepository.findExpensesByCategories(
+          userId, initialDate, finalDate);
+
+      //Assert
+      expect(expenseByCategories, <UserExpensesByCategoriesViewModel>[]);
+    });
+
+    test('Should throws DatabaseException', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      database.mockQueryException(mockException: MockMysqlException());
+
+      //Act
+      final call = userRepository.findExpensesByCategories;
+
+      //Assert
+      expect(call(userId, initialDate, finalDate),
+          throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
+    });
+
   });
 }
