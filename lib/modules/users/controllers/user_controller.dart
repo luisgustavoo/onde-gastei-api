@@ -105,5 +105,33 @@ class UserController {
     }
   }
 
+  @Route.get('/<userId|[0-9]+>/expenses/categories/')
+  Future<Response> findExpensesByCategories(
+      Request request, String userId) async {
+    try {
+      final initialDate =
+          DateTime.parse(request.url.queryParameters['datainicial'].toString());
+      final finalDate =
+          DateTime.parse(request.url.queryParameters['datafinal'].toString());
+
+      final expenseByCategories = await service.findExpensesByCategories(
+          int.parse(userId.toString()), initialDate, finalDate);
+
+      final expenseByCategoriesResponse = expenseByCategories
+          .map((d) => {
+                'id_categoria': d.categoryId,
+                'descricao': d.description,
+                'valor_total': d.totalValue
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(expenseByCategoriesResponse));
+    } on Exception catch (e, s) {
+      log.error('Erro ao buscar despesas por categorias', e, s);
+      return Response.internalServerError(
+          body: {'message': 'Não foi possível buscar despesas por categorias'});
+    }
+  }
+
   Router get router => _$UserControllerRouter(this);
 }

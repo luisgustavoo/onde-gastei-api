@@ -14,5 +14,7 @@ Router _$UserControllerRouter(UserController service) {
       'GET', r'/<userId|[0-9]+>/categories', service.findCategoriesByUserId);
   router.add('GET', r'/<userId|[0-9]+>/categories/',
       service.findExpenseByUserIdAndPeriod);
+  router.add('GET', r'/<userId|[0-9]+>/expenses/categories/',
+      service.findExpensesByCategories);
   return router;
 }
