@@ -6,6 +6,7 @@ import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/user_repository.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_categories_by_percentage_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
 import 'package:test/test.dart';
@@ -352,6 +353,65 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
+  });
 
+  group('Group test findPercentageByCategories', () {
+    test('Should return categories by percentage with success', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final jsonData = FixtureReader.getJsonData(
+          'modules/users/data/fixture/find_percentage_by_categories_success.json');
+      final mockResults = MockResults(jsonData);
+      database.mockQuery(mockResults);
+      final userCategoriesPercentageExpected =
+          UserCategoriesByPercentageViewModel(
+              categoryId: 1,
+              description: 'Supermercado',
+              categoryValue: 150.5,
+              categoryPercentage: 60.08);
+
+      //Act
+      final userCategoriesPercentage = await userRepository
+          .findPercentageByCategories(userId, initialDate, finalDate);
+
+      //Assert
+      expect(userCategoriesPercentage[0], userCategoriesPercentageExpected);
+      database.verifyConnectionClose();
+    });
+
+    test('Should return categories by percentage empty', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final mockResults = MockResults();
+      database.mockQuery(mockResults);
+      //Act
+      final userCategoriesPercentage = await userRepository
+          .findPercentageByCategories(userId, initialDate, finalDate);
+
+      //Assert
+      expect(userCategoriesPercentage, <UserCategoriesByPercentageViewModel>[]);
+      database.verifyConnectionClose();
+    });
+
+    test('Should return throw DatabaseException', () async {
+      // Arrange
+      const userId = 1;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      database.mockQueryException(mockException: MockMysqlException());
+
+      //Act
+      final call = userRepository.findPercentageByCategories;
+
+      //Assert
+      expect(call(userId, initialDate, finalDate),
+          throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
+    });
   });
 }

@@ -25,7 +25,7 @@ class UserController {
       final user = await service.findById(userId);
 
       return Response.ok(jsonEncode(
-          {'id_usuario': user.id, 'name': user.name, 'email': user.email}));
+          {'id_usuario': user.id, 'nome': user.name, 'email': user.email}));
     } on UserNotFoundException {
       return Response(204);
     } on Exception catch (e, s) {
@@ -42,7 +42,7 @@ class UserController {
       final dataRequest =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final userUpdateNameInputModel =
-          UserUpdateNameInputModel(name: dataRequest['name'].toString());
+          UserUpdateNameInputModel(name: dataRequest['nome'].toString());
 
       await service.updateUserNameById(userId, userUpdateNameInputModel);
 
@@ -59,7 +59,7 @@ class UserController {
   Future<Response> findCategoriesByUserId(
       Request request, String userId) async {
     final categories = await service.findCategoriesByUserId(int.parse(userId));
-    final categoriesResponse = categories
+    final categoriesMapped = categories
         .map((c) => {
               'id_categoria': c.id,
               'descricao': c.description,
@@ -67,10 +67,10 @@ class UserController {
               'codigo_cor': c.colorCode,
             })
         .toList();
-    return Response.ok(jsonEncode(categoriesResponse));
+    return Response.ok(jsonEncode(categoriesMapped));
   }
 
-  @Route.get('/<userId|[0-9]+>/categories/')
+  @Route.get('/<userId|[0-9]+>/categories/period')
   Future<Response> findExpenseByUserIdAndPeriod(
       Request request, String userId) async {
     try {
@@ -82,7 +82,7 @@ class UserController {
       final expenses = await service.findExpenseByUserIdAndPeriod(
           int.parse(userId.toString()), initialDate, finalDate);
 
-      final expensesResponse = expenses
+      final expensesMapped = expenses
           .map((d) => {
                 'id_despesa': d.expenseId,
                 'descricao': d.description,
@@ -97,7 +97,7 @@ class UserController {
               })
           .toList();
 
-      return Response.ok(jsonEncode(expensesResponse));
+      return Response.ok(jsonEncode(expensesMapped));
     } on Exception catch (e, s) {
       log.error('Erro ao buscar despesas por período', e, s);
       return Response.internalServerError(
@@ -105,7 +105,7 @@ class UserController {
     }
   }
 
-  @Route.get('/<userId|[0-9]+>/expenses/categories/')
+  @Route.get('/<userId|[0-9]+>/expenses/categories')
   Future<Response> findExpensesByCategories(
       Request request, String userId) async {
     try {
@@ -117,7 +117,7 @@ class UserController {
       final expenseByCategories = await service.findExpensesByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
 
-      final expenseByCategoriesResponse = expenseByCategories
+      final expenseByCategoriesMapped = expenseByCategories
           .map((d) => {
                 'id_categoria': d.categoryId,
                 'descricao': d.description,
@@ -125,11 +125,41 @@ class UserController {
               })
           .toList();
 
-      return Response.ok(jsonEncode(expenseByCategoriesResponse));
+      return Response.ok(jsonEncode(expenseByCategoriesMapped));
     } on Exception catch (e, s) {
       log.error('Erro ao buscar despesas por categorias', e, s);
       return Response.internalServerError(
           body: {'message': 'Não foi possível buscar despesas por categorias'});
+    }
+  }
+
+  @Route.get('/<userId|[0-9]+>/percentage/categories')
+  Future<Response> findPercentageByCategories(
+      Request request, String userId) async {
+    try {
+      final initialDate =
+      DateTime.parse(request.url.queryParameters['datainicial'].toString());
+      final finalDate =
+      DateTime.parse(request.url.queryParameters['datafinal'].toString());
+
+      final userCategoriesPercentage = await service.findPercentageByCategories(
+          int.parse(userId.toString()), initialDate, finalDate);
+
+      final userCategoriesPercentageMapped = userCategoriesPercentage
+          .map((c) => {
+        'id_categoria': c.categoryId,
+        'descricao': c.description,
+        'valor_total_categoria': c.categoryValue,
+        'percentual_categoria': c.categoryPercentage,
+      })
+          .toList();
+
+      return Response.ok(jsonEncode(userCategoriesPercentageMapped));
+    } on Exception catch (e, s) {
+      log.error('Erro ao buscar percentual por categoria', e, s);
+      return Response.internalServerError(
+          body: jsonEncode(
+              {'message': 'Erro ao buscar percentual por categoria'}));
     }
   }
 

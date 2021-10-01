@@ -9,6 +9,7 @@ import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/helpers/cripty_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
+import 'package:onde_gastei_api/modules/users/view_model/user_categories_by_percentage_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
 
@@ -249,6 +250,60 @@ class UserRepository implements IUserRepository {
       }
 
       return <UserExpensesByCategoriesViewModel>[];
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao buscar despesas por categorias', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<List<UserCategoriesByPercentageViewModel>> findPercentageByCategories(
+      int userId, DateTime initialDate, DateTime finalDate) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      final result = await conn.query('''
+              SELECT tab.id_categoria,
+                     tab.descricao, 
+                     tab.valor_total_categoria,
+                     ROUND(((tab.valor_total_categoria / tab.total_geral) * 100), 2) AS percentual_categoria
+              FROM
+              (SELECT 
+                  c.id_categoria,
+                  c.descricao,
+                  SUM(d.valor) AS valor_total_categoria,
+                  SUM(d.valor) over (partition by null) as total_geral
+              FROM
+                  despesa d
+                      INNER JOIN
+                  categoria c ON (d.id_categoria = c.id_categoria)
+              WHERE
+                  d.id_usuario = ?
+                      AND d.data BETWEEN ? AND ?
+              GROUP BY c.id_categoria , c.descricao , d.valor
+              ) tab
+              ORDER BY percentual_categoria DESC
+      
+      ''',
+          [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
+
+      if (result.isNotEmpty) {
+        return result
+            .map((c) => UserCategoriesByPercentageViewModel(
+                categoryId: int.parse(c['id_categoria'].toString()),
+                description: c['descricao'].toString(),
+                categoryValue:
+                    double.parse(c['valor_total_categoria'].toString()),
+                categoryPercentage: double.parse(
+                  c['percentual_categoria'].toString(),
+                )))
+            .toList();
+      }
+
+      return <UserCategoriesByPercentageViewModel>[];
     } on MySqlException catch (e, s) {
       log.error('Erro ao buscar despesas por categorias', e, s);
       throw DatabaseException();
