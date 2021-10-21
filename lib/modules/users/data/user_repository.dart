@@ -165,7 +165,7 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<List<UserExpenseByPeriodViewModel>> findExpenseByUserIdAndPeriod(
+  Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
       int userId, DateTime initialDate, DateTime finalDate) async {
     MySqlConnection? conn;
 
@@ -218,7 +218,7 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<List<UserExpensesByCategoriesViewModel>> findExpensesByCategories(
+  Future<List<UserExpensesByCategoriesViewModel>> findTotalExpensesByCategories(
       int userId, DateTime initialDate, DateTime finalDate) async {
     MySqlConnection? conn;
 
@@ -306,6 +306,67 @@ class UserRepository implements IUserRepository {
       return <UserCategoriesByPercentageViewModel>[];
     } on MySqlException catch (e, s) {
       log.error('Erro ao buscar despesas por categorias', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
+      int userId,
+      int categoryId,
+      DateTime initialDate,
+      DateTime finalDate) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      final result = await conn.query('''
+          SELECT 
+              d.id_despesa,
+              d.descricao,
+              d.valor,
+              d.data,
+              c.id_categoria,
+              c.descricao as descricao_categoria,
+              c.codigo_icone,
+              c.codigo_cor
+          FROM
+              despesa d
+                  INNER JOIN
+              categoria c ON (d.id_categoria = c.id_categoria)
+          WHERE
+              d.id_usuario = ?
+                  AND c.id_categoria = ?
+                  AND d.data BETWEEN ? AND ?      
+      
+      ''', [
+        userId,
+        categoryId,
+        initialDate.toIso8601String(),
+        finalDate.toIso8601String()
+      ]);
+
+      if (result.isNotEmpty) {
+        return result
+            .map((d) => UserExpenseByPeriodViewModel(
+                expenseId: int.parse(d['id_despesa'].toString()),
+                description: d['descricao'].toString(),
+                value: double.parse(d['valor'].toString()),
+                date: DateTime.parse(d['data'].toString()),
+                category: Category(
+                  id: int.parse(d['id_categoria'].toString()),
+                  description: d['descricao_categoria'].toString(),
+                  iconCode: int.parse(d['codigo_icone'].toString()),
+                  colorCode: int.parse(d['codigo_cor'].toString()),
+                )))
+            .toList();
+      }
+
+      return <UserExpenseByPeriodViewModel>[];
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao buscar despesas por período', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();

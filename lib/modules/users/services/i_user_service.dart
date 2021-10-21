@@ -19,12 +19,15 @@ abstract class IUserService {
 
   Future<List<Category>> findCategoriesByUserId(int userId);
 
-  Future<List<UserExpenseByPeriodViewModel>> findExpenseByUserIdAndPeriod(
+  Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
       int userId, DateTime initialDate, DateTime finalDate);
 
-  Future<List<UserExpensesByCategoriesViewModel>> findExpensesByCategories(
+  Future<List<UserExpensesByCategoriesViewModel>> findTotalExpensesByCategories(
       int userId, DateTime initialDate, DateTime finalDate);
 
   Future<List<UserCategoriesByPercentageViewModel>> findPercentageByCategories(
       int userId, DateTime initialDate, DateTime finalDate);
+
+  Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
+      int userId, int categoryId, DateTime initialDate, DateTime finalDate);
 }

@@ -71,7 +71,7 @@ class UserController {
   }
 
   @Route.get('/<userId|[0-9]+>/categories/period')
-  Future<Response> findExpenseByUserIdAndPeriod(
+  Future<Response> findExpenseByPeriod(
       Request request, String userId) async {
     try {
       final initialDate =
@@ -79,7 +79,7 @@ class UserController {
       final finalDate =
           DateTime.parse(request.url.queryParameters['datafinal'].toString());
 
-      final expenses = await service.findExpenseByUserIdAndPeriod(
+      final expenses = await service.findExpenseByPeriod(
           int.parse(userId.toString()), initialDate, finalDate);
 
       final expensesMapped = expenses
@@ -105,8 +105,8 @@ class UserController {
     }
   }
 
-  @Route.get('/<userId|[0-9]+>/expenses/categories')
-  Future<Response> findExpensesByCategories(
+  @Route.get('/<userId|[0-9]+>/total-expenses/categories')
+  Future<Response> findTotalExpensesByCategories(
       Request request, String userId) async {
     try {
       final initialDate =
@@ -114,7 +114,7 @@ class UserController {
       final finalDate =
           DateTime.parse(request.url.queryParameters['datafinal'].toString());
 
-      final expenseByCategories = await service.findExpensesByCategories(
+      final expenseByCategories = await service.findTotalExpensesByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
 
       final expenseByCategoriesMapped = expenseByCategories
@@ -138,20 +138,20 @@ class UserController {
       Request request, String userId) async {
     try {
       final initialDate =
-      DateTime.parse(request.url.queryParameters['datainicial'].toString());
+          DateTime.parse(request.url.queryParameters['datainicial'].toString());
       final finalDate =
-      DateTime.parse(request.url.queryParameters['datafinal'].toString());
+          DateTime.parse(request.url.queryParameters['datafinal'].toString());
 
       final userCategoriesPercentage = await service.findPercentageByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
 
       final userCategoriesPercentageMapped = userCategoriesPercentage
           .map((c) => {
-        'id_categoria': c.categoryId,
-        'descricao': c.description,
-        'valor_total_categoria': c.categoryValue,
-        'percentual_categoria': c.categoryPercentage,
-      })
+                'id_categoria': c.categoryId,
+                'descricao': c.description,
+                'valor_total_categoria': c.categoryValue,
+                'percentual_categoria': c.categoryPercentage,
+              })
           .toList();
 
       return Response.ok(jsonEncode(userCategoriesPercentageMapped));
@@ -160,6 +160,43 @@ class UserController {
       return Response.internalServerError(
           body: jsonEncode(
               {'message': 'Erro ao buscar percentual por categoria'}));
+    }
+  }
+
+  @Route.get('/<userId|[0-9]+>/expenses/categories/<categoryId|[0-9]+>')
+  Future<Response> findExpensesByCategories(
+      Request request, String userId, String categoryId) async {
+    try {
+      final initialDate = request.url.queryParameters['datainicial'];
+      final finalDate = request.url.queryParameters['datafinal'];
+
+      final expensesByCategory = await service.findExpensesByCategories(
+          int.parse(userId.toString()),
+          int.parse(categoryId.toString()),
+          DateTime.parse(initialDate.toString()),
+          DateTime.parse(finalDate.toString()));
+
+      final expensesByCategoryMapped = expensesByCategory
+          .map((d) => {
+                'id_despesa': d.expenseId,
+                'descricao': d.description,
+                'valor': d.value,
+                'data': d.date.toIso8601String(),
+                'categoria': {
+                  'id_categoria': d.category.id,
+                  'descricao_categoria': d.category.description,
+                  'codigo_icone': d.category.iconCode,
+                  'codigo_cor': d.category.colorCode,
+                }
+              })
+          .toList();
+
+      return Response.ok(jsonEncode(expensesByCategoryMapped));
+    } on Exception catch (e, s) {
+      log.error('Erro ao buscar despesas por categoria', e, s);
+      return Response.internalServerError(
+          body: jsonEncode(
+              {'message': 'Erro ao buscar despesas por categoria'}));
     }
   }
 

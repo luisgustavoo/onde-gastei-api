@@ -260,7 +260,7 @@ void main() {
       database.mockQuery(mockResults);
 
       //Act
-      final expense = await userRepository.findExpenseByUserIdAndPeriod(
+      final expense = await userRepository.findExpenseByPeriod(
           userId, initialDate, finalDate);
       //Assert
       expect(expense[0], expensesExpected);
@@ -276,7 +276,7 @@ void main() {
       final mockResults = MockResults();
       database.mockQuery(mockResults);
       //Act
-      final expense = await userRepository.findExpenseByUserIdAndPeriod(
+      final expense = await userRepository.findExpenseByPeriod(
           userId, initialDate, finalDate);
 
       //Assert
@@ -292,7 +292,7 @@ void main() {
       database.mockQueryException(mockException: MockMysqlException());
 
       //Act
-      final call = userRepository.findExpenseByUserIdAndPeriod;
+      final call = userRepository.findExpenseByPeriod;
 
       //Assert
       expect(call(userId, initialDate, finalDate),
@@ -311,12 +311,12 @@ void main() {
       final expenseByCategoriesExpected = UserExpensesByCategoriesViewModel(
           categoryId: 1, description: 'Supermercado', totalValue: 15.5);
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_expense_by_categories_success.json');
+          'modules/users/data/fixture/find_total_expense_by_categories_success.json');
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
       //Act
-      final expenseByCategories = await userRepository.findExpensesByCategories(
-          userId, initialDate, finalDate);
+      final expenseByCategories = await userRepository
+          .findTotalExpensesByCategories(userId, initialDate, finalDate);
 
       //Assert
       expect(expenseByCategories[0], expenseByCategoriesExpected);
@@ -330,8 +330,8 @@ void main() {
       final mockResults = MockResults();
       database.mockQuery(mockResults);
       //Act
-      final expenseByCategories = await userRepository.findExpensesByCategories(
-          userId, initialDate, finalDate);
+      final expenseByCategories = await userRepository
+          .findTotalExpensesByCategories(userId, initialDate, finalDate);
 
       //Assert
       expect(expenseByCategories, <UserExpensesByCategoriesViewModel>[]);
@@ -345,7 +345,7 @@ void main() {
       database.mockQueryException(mockException: MockMysqlException());
 
       //Act
-      final call = userRepository.findExpensesByCategories;
+      final call = userRepository.findTotalExpensesByCategories;
 
       //Assert
       expect(call(userId, initialDate, finalDate),
@@ -409,6 +409,73 @@ void main() {
 
       //Assert
       expect(call(userId, initialDate, finalDate),
+          throwsA(isA<DatabaseException>()));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      database.verifyConnectionClose();
+    });
+  });
+
+  group('Group findExpensesByCategory', () {
+    test('Should expenses by category with success', () async {
+      // Arrange
+      const userId = 1;
+      const categoryId = 2;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final expensesExpected = UserExpenseByPeriodViewModel(
+          expenseId: 1,
+          description: 'Compra no supermercado',
+          value: 150.5,
+          date: DateTime.parse('2021-09-28T00:00:00.000Z'),
+          category: Category(
+              id: 2,
+              description: 'Supermercado',
+              iconCode: 59553,
+              colorCode: 4293128957));
+
+      final jsonData = FixtureReader.getJsonData(
+          'modules/users/data/fixture/find_expenses_by_category_success.json');
+      final mockResults = MockResults(jsonData);
+      database.mockQuery(mockResults);
+
+      //Act
+      final expense = await userRepository.findExpensesByCategories(
+          userId, categoryId, initialDate, finalDate);
+      //Assert
+      expect(expense[0], expensesExpected);
+      expect(expense[0], isA<UserExpenseByPeriodViewModel>());
+      database.verifyConnectionClose();
+    });
+
+    test('Should return expenses by categories empty', () async {
+      // Arrange
+      const userId = 1;
+      const categoryId = 2;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      final mockResults = MockResults();
+      database.mockQuery(mockResults);
+      //Act
+      final expenseByCategories = await userRepository.findExpensesByCategories(
+          userId, categoryId, initialDate, finalDate);
+
+      //Assert
+      expect(expenseByCategories, <UserExpensesByCategoriesViewModel>[]);
+    });
+
+    test('Should throws DatabaseException', () async {
+      // Arrange
+      const userId = 1;
+      const categoryId = 2;
+      final initialDate = DateTime.parse('2021-09-28');
+      final finalDate = DateTime.parse('2021-09-28');
+      database.mockQueryException(mockException: MockMysqlException());
+
+      //Act
+      final call = userRepository.findExpensesByCategories;
+
+      //Assert
+      expect(call(userId, categoryId, initialDate, finalDate),
           throwsA(isA<DatabaseException>()));
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
