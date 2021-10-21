@@ -312,6 +312,7 @@ class UserRepository implements IUserRepository {
     }
   }
 
+
   @override
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
       int userId,
@@ -372,4 +373,5 @@ class UserRepository implements IUserRepository {
       await conn?.close();
     }
   }
+
 }

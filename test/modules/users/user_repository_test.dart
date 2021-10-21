@@ -330,8 +330,10 @@ void main() {
       final mockResults = MockResults();
       database.mockQuery(mockResults);
       //Act
+
       final expenseByCategories = await userRepository
           .findTotalExpensesByCategories(userId, initialDate, finalDate);
+
 
       //Assert
       expect(expenseByCategories, <UserExpensesByCategoriesViewModel>[]);
@@ -345,7 +347,9 @@ void main() {
       database.mockQueryException(mockException: MockMysqlException());
 
       //Act
+
       final call = userRepository.findTotalExpensesByCategories;
+
 
       //Assert
       expect(call(userId, initialDate, finalDate),
@@ -410,6 +414,7 @@ void main() {
       //Assert
       expect(call(userId, initialDate, finalDate),
           throwsA(isA<DatabaseException>()));
+
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
@@ -477,6 +482,7 @@ void main() {
       //Assert
       expect(call(userId, categoryId, initialDate, finalDate),
           throwsA(isA<DatabaseException>()));
+
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });

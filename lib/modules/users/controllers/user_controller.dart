@@ -105,6 +105,7 @@ class UserController {
     }
   }
 
+
   @Route.get('/<userId|[0-9]+>/total-expenses/categories')
   Future<Response> findTotalExpensesByCategories(
       Request request, String userId) async {
@@ -113,6 +114,7 @@ class UserController {
           DateTime.parse(request.url.queryParameters['datainicial'].toString());
       final finalDate =
           DateTime.parse(request.url.queryParameters['datafinal'].toString());
+
 
       final expenseByCategories = await service.findTotalExpensesByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
@@ -138,6 +140,7 @@ class UserController {
       Request request, String userId) async {
     try {
       final initialDate =
+
           DateTime.parse(request.url.queryParameters['datainicial'].toString());
       final finalDate =
           DateTime.parse(request.url.queryParameters['datafinal'].toString());

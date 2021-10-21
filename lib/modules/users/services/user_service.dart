@@ -40,6 +40,7 @@ class UserService implements IUserService {
   @override
   Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
           int userId, DateTime initialDate, DateTime finalDate) =>
+
       repository.findExpenseByPeriod(userId, initialDate, finalDate);
 
   @override
@@ -47,10 +48,12 @@ class UserService implements IUserService {
           int userId, DateTime initialDate, DateTime finalDate) =>
       repository.findTotalExpensesByCategories(userId, initialDate, finalDate);
 
+
   @override
   Future<List<UserCategoriesByPercentageViewModel>> findPercentageByCategories(
           int userId, DateTime initialDate, DateTime finalDate) =>
       repository.findPercentageByCategories(userId, initialDate, finalDate);
+
 
   @override
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
@@ -60,4 +63,5 @@ class UserService implements IUserService {
           DateTime finalDate) =>
       repository.findExpensesByCategories(
           userId, categoryId, initialDate, finalDate);
+
 }

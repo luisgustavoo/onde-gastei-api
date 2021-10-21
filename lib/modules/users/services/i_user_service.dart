@@ -22,6 +22,7 @@ abstract class IUserService {
   Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
       int userId, DateTime initialDate, DateTime finalDate);
 
+
   Future<List<UserExpensesByCategoriesViewModel>> findTotalExpensesByCategories(
       int userId, DateTime initialDate, DateTime finalDate);
 
@@ -30,4 +31,5 @@ abstract class IUserService {
 
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
       int userId, int categoryId, DateTime initialDate, DateTime finalDate);
+
 }
