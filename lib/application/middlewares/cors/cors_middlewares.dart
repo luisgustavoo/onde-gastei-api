@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:onde_gastei_api/application/middlewares/middlewares.dart';
 import 'package:shelf/shelf.dart';
 
-
 class CorsMiddlewares extends Middlewares {
   final headers = <String, String>{
     'Access-Control-Allow-Origin': '*',
