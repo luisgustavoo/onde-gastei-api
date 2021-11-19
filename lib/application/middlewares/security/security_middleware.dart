@@ -50,7 +50,7 @@ class SecurityMiddleware extends Middlewares {
       final userId = claimsMap['sub'].toString();
 
       final securityHeaders = <String, dynamic>{
-        'users': userId,
+        'user': userId,
         'access_token': authorizationToken,
       };
 

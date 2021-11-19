@@ -81,7 +81,7 @@ class UserRepository implements IUserRepository {
       SELECT 
           id_usuario, nome, email
       FROM
-          onde_gastei.usuario
+          usuario
       WHERE
           id_usuario = ?
       ''', [id]);
@@ -92,9 +92,10 @@ class UserRepository implements IUserRepository {
         final mysqlData = result.first;
 
         return User(
-            id: int.parse(mysqlData['id_usuario'].toString()),
-            name: mysqlData['nome'].toString(),
-            email: mysqlData['email'].toString());
+          id: int.parse(mysqlData['id_usuario'].toString()),
+          name: mysqlData['nome'].toString(),
+          email: mysqlData['email'].toString(),
+        );
       }
     } on MySqlException catch (e, s) {
       log.error('Erro ao buscar usuario por id', e, s);
@@ -312,7 +313,6 @@ class UserRepository implements IUserRepository {
     }
   }
 
-
   @override
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
       int userId,
@@ -374,4 +374,41 @@ class UserRepository implements IUserRepository {
     }
   }
 
+  @override
+  Future<void> confirmLogin(int userId, String refreshToken) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      await conn.query('''
+        UPDATE usuario
+        SET
+          refresh_token = ?
+        WHERE id_usuario = ?            
+      
+      ''', [refreshToken, userId]);
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao confirmar login', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<void> updateRefreshToken(int userId, String refreshToken) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      await conn.query(
+          'update usuario set refresh_token = ? where id_usuario = ?',
+          [refreshToken, userId]);
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao atualizar refresh token', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
 }

@@ -20,7 +20,7 @@ class UserController {
   @Route.get('/')
   Future<Response> findByToken(Request request) async {
     try {
-      final userId = int.parse(request.headers['users'].toString());
+      final userId = int.parse(request.headers['user'].toString());
 
       final user = await service.findById(userId);
 
@@ -38,7 +38,7 @@ class UserController {
   @Route.put('/<userId|[0-9]+>/update')
   Future<Response> updateUserNameById(Request request, String userId) async {
     try {
-      final userId = int.parse(request.headers['users'].toString());
+      final userId = int.parse(request.headers['user'].toString());
       final dataRequest =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final userUpdateNameInputModel =
@@ -71,8 +71,7 @@ class UserController {
   }
 
   @Route.get('/<userId|[0-9]+>/categories/period')
-  Future<Response> findExpenseByPeriod(
-      Request request, String userId) async {
+  Future<Response> findExpenseByPeriod(Request request, String userId) async {
     try {
       final initialDate =
           DateTime.parse(request.url.queryParameters['datainicial'].toString());
@@ -105,7 +104,6 @@ class UserController {
     }
   }
 
-
   @Route.get('/<userId|[0-9]+>/total-expenses/categories')
   Future<Response> findTotalExpensesByCategories(
       Request request, String userId) async {
@@ -114,7 +112,6 @@ class UserController {
           DateTime.parse(request.url.queryParameters['datainicial'].toString());
       final finalDate =
           DateTime.parse(request.url.queryParameters['datafinal'].toString());
-
 
       final expenseByCategories = await service.findTotalExpensesByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
@@ -140,7 +137,6 @@ class UserController {
       Request request, String userId) async {
     try {
       final initialDate =
-
           DateTime.parse(request.url.queryParameters['datainicial'].toString());
       final finalDate =
           DateTime.parse(request.url.queryParameters['datafinal'].toString());
@@ -198,8 +194,8 @@ class UserController {
     } on Exception catch (e, s) {
       log.error('Erro ao buscar despesas por categoria', e, s);
       return Response.internalServerError(
-          body: jsonEncode(
-              {'message': 'Erro ao buscar despesas por categoria'}));
+          body:
+              jsonEncode({'message': 'Erro ao buscar despesas por categoria'}));
     }
   }
 

@@ -18,15 +18,16 @@ abstract class IUserRepository {
   Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
       int userId, DateTime initialDate, DateTime finalDate);
 
-
   Future<List<UserExpensesByCategoriesViewModel>> findTotalExpensesByCategories(
       int userId, DateTime initialDate, DateTime finalDate);
 
   Future<List<UserCategoriesByPercentageViewModel>> findPercentageByCategories(
       int userId, DateTime initialDate, DateTime finalDate);
 
-
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
       int userId, int categoryId, DateTime initialDate, DateTime finalDate);
 
+  Future<void> confirmLogin(int userId, String refreshToken);
+
+  Future<void> updateRefreshToken(int userId, String refreshToken);
 }

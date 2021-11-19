@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
+
 import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/helpers/jwt_helper.dart';
@@ -33,7 +33,7 @@ class AuthController {
           jsonEncode({'message': 'Cadastro realizado com sucesso!'}));
     } on UserExistsException {
       return Response(400,
-          body: jsonEncode({'message': 'Usuário já cadasatrado'}));
+          body: jsonEncode({'message': 'Usuário já cadastrado'}));
     } on Exception catch (e) {
       log.error('Erro ao cadastrar usuário', e);
       return Response.internalServerError(
@@ -59,6 +59,55 @@ class AuthController {
       log.error('Erro ao fazer login', e, s);
       return Response.internalServerError(
           body: jsonEncode({'message': 'Erro ao realizar login'}));
+    }
+  }
+
+  @Route('PATCH', '/confirm')
+  Future<Response> confirmLogin(Request request) async {
+    try {
+      final userId = int.parse(request.headers['user']!);
+      final accessToken =
+          JwtHelper.generateJwt(userId).replaceAll('Bearer ', '');
+      final refreshToken = await service.confirmLogin(userId, accessToken);
+      return Response.ok(
+        jsonEncode(
+          <String, dynamic>{
+            'access_token': 'Bearer $accessToken',
+            'refresh_token': refreshToken
+          },
+        ),
+      );
+    } on Exception catch (e, s) {
+      log.error('Erro ao confirmar login', e, s);
+      return Response.internalServerError();
+    }
+  }
+
+  @Route.get('/refresh')
+  Future<Response> refresToken(Request request) async {
+    try {
+      final userId = int.parse(request.headers['user']!);
+      final accessToken = request.headers['access_token']!;
+      final dataRequest =
+          jsonDecode(await request.readAsString()) as Map<String, dynamic>;
+      final refreshToken = dataRequest['refresh_token'].toString();
+      final refreshTokenModel =
+          await service.refreshToken(userId, accessToken, refreshToken);
+      return Response.ok(
+        jsonEncode(
+          <String, dynamic>{
+            'access_token': refreshTokenModel.accessToken,
+            'refresh_token': refreshTokenModel.refreshToken
+          },
+        ),
+      );
+    } on Exception catch (e, s) {
+      log.error('Erro ao atualizar refresh token', e, s);
+      return Response.internalServerError(
+        body: jsonEncode(
+          {'message': 'Erro ao atualizar access token'},
+        ),
+      );
     }
   }
 

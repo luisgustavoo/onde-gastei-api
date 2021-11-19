@@ -8,12 +8,13 @@ class JwtHelper {
 
   static String generateJwt(int userId) {
     final claimSet = JwtClaim(
-        issuer: 'ondegastei',
-        subject: userId.toString(),
-        expiry: DateTime.now().add(const Duration(days: 1)),
-        notBefore: DateTime.now(),
-        issuedAt: DateTime.now(),
-        maxAge: const Duration(days: 1));
+      issuer: 'ondegastei',
+      subject: userId.toString(),
+      expiry: DateTime.now().add(const Duration(minutes: 1)),
+      notBefore: DateTime.now(),
+      issuedAt: DateTime.now(),
+      maxAge: const Duration(days: 1),
+    );
 
     return 'Bearer ${issueJwtHS256(claimSet, _jwtSecret)}';
   }
@@ -25,7 +26,7 @@ class JwtHelper {
     final claimSet = JwtClaim(
       issuer: accessToken,
       subject: 'RefreshToken',
-      expiry: DateTime.now().add(const Duration(days: 10)),
+      expiry: DateTime.now().add(const Duration(days: 20)),
       notBefore: DateTime.now(),
       otherClaims: <String, dynamic>{},
     );

@@ -42,8 +42,8 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
       () => _i10.ExpenseServices(repository: get<_i6.IExpenseRepository>()));
   gh.lazySingleton<_i11.IUserRepository>(() => _i12.UserRepository(
       connection: get<_i3.IDatabaseConnection>(), log: get<_i8.ILog>()));
-  gh.lazySingleton<_i13.IUserService>(
-      () => _i14.UserService(repository: get<_i11.IUserRepository>()));
+  gh.lazySingleton<_i13.IUserService>(() => _i14.UserService(
+      repository: get<_i11.IUserRepository>(), log: get<_i8.ILog>()));
   gh.factory<_i15.UserController>(() => _i15.UserController(
       service: get<_i13.IUserService>(), log: get<_i8.ILog>()));
   gh.factory<_i16.AuthController>(() => _i16.AuthController(
