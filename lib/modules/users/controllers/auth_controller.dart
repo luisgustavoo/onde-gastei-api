@@ -83,7 +83,7 @@ class AuthController {
     }
   }
 
-  @Route.get('/refresh')
+  @Route.put('/refresh')
   Future<Response> refresToken(Request request) async {
     try {
       final userId = int.parse(request.headers['user']!);
