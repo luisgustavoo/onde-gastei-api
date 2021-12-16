@@ -21,11 +21,11 @@ Future<void> main(List<String> args) async {
   final getIt = GetIt.I;
 
   final _handler = const Pipeline()
-      .addMiddleware(CorsMiddlewares().handler)
+      .addMiddleware(logRequests())
+      .addMiddleware(SecurityMiddleware(getIt.get()).handler)
       .addMiddleware(
           DefaultContentType('application/json;charset=utf-8').handler)
-      .addMiddleware(SecurityMiddleware(getIt.get()).handler)
-      .addMiddleware(logRequests())
+      .addMiddleware(CorsMiddlewares().handler)
       .addHandler(router);
 
   // For running in containers, we respect the PORT environment variable.

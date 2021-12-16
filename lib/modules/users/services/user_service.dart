@@ -80,7 +80,7 @@ class UserService implements IUserService {
     _validateRefreshToken(accessToken, refreshToken);
     final newAccessToken = JwtHelper.generateJwt(userId);
     final newRefreshToken =
-        JwtHelper.refreshToken(newAccessToken.replaceAll('Bearer', ''));
+        JwtHelper.refreshToken(newAccessToken.replaceAll('Bearer ', ''));
     await repository.updateRefreshToken(userId, newRefreshToken);
     return RefreshTokenViewModel(
         accessToken: newAccessToken, refreshToken: newRefreshToken);
