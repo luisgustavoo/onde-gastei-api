@@ -2,7 +2,19 @@ import 'package:logger/logger.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 
 class Log implements ILog {
-  final _logger = Logger();
+  Log() {
+    var release = true;
+    assert(() {
+      release = false;
+      return true;
+    }());
+
+    _logger = Logger(
+      filter: release ? ProductionFilter() : DevelopmentFilter(),
+    );
+  }
+
+  var _logger = Logger();
 
   @override
   void debug(Object message, [Object? error, StackTrace? stackTrace]) =>
