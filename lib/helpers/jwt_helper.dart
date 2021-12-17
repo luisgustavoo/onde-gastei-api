@@ -10,7 +10,7 @@ class JwtHelper {
     final claimSet = JwtClaim(
       issuer: 'ondegastei',
       subject: userId.toString(),
-      expiry: DateTime.now().add(const Duration(minutes: 1)),
+      expiry: DateTime.now().add(const Duration(days: 1)),
       notBefore: DateTime.now(),
       issuedAt: DateTime.now(),
       maxAge: const Duration(days: 1),
@@ -27,7 +27,7 @@ class JwtHelper {
       issuer: accessToken,
       subject: 'RefreshToken',
       expiry: DateTime.now().add(const Duration(days: 20)),
-      notBefore: DateTime.now(),
+      notBefore: DateTime.now().add(const Duration(hours: 12)),
       otherClaims: <String, dynamic>{},
     );
 
