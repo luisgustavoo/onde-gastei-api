@@ -1,12 +1,13 @@
 class User {
-  User(
-      {required this.id,
-      required this.name,
-      required this.email,
-      this.password,
-      this.androidToken,
-      this.iosToken,
-      this.refreshToken});
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    this.password,
+    this.androidToken,
+    this.iosToken,
+    this.refreshToken,
+  });
 
   final int id;
   final String name;

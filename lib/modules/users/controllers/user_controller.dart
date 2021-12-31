@@ -73,10 +73,10 @@ class UserController {
   @Route.get('/<userId|[0-9]+>/categories/period')
   Future<Response> findExpenseByPeriod(Request request, String userId) async {
     try {
-      final initialDate =
-          DateTime.parse(request.url.queryParameters['datainicial'].toString());
+      final initialDate = DateTime.parse(
+          request.url.queryParameters['initial_date'].toString());
       final finalDate =
-          DateTime.parse(request.url.queryParameters['datafinal'].toString());
+          DateTime.parse(request.url.queryParameters['final_date'].toString());
 
       final expenses = await service.findExpenseByPeriod(
           int.parse(userId.toString()), initialDate, finalDate);
@@ -108,10 +108,10 @@ class UserController {
   Future<Response> findTotalExpensesByCategories(
       Request request, String userId) async {
     try {
-      final initialDate =
-          DateTime.parse(request.url.queryParameters['datainicial'].toString());
+      final initialDate = DateTime.parse(
+          request.url.queryParameters['initial_date'].toString());
       final finalDate =
-          DateTime.parse(request.url.queryParameters['datafinal'].toString());
+          DateTime.parse(request.url.queryParameters['final_date'].toString());
 
       final expenseByCategories = await service.findTotalExpensesByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
@@ -136,10 +136,10 @@ class UserController {
   Future<Response> findPercentageByCategories(
       Request request, String userId) async {
     try {
-      final initialDate =
-          DateTime.parse(request.url.queryParameters['datainicial'].toString());
+      final initialDate = DateTime.parse(
+          request.url.queryParameters['initial_date'].toString());
       final finalDate =
-          DateTime.parse(request.url.queryParameters['datafinal'].toString());
+          DateTime.parse(request.url.queryParameters['final_date'].toString());
 
       final userCategoriesPercentage = await service.findPercentageByCategories(
           int.parse(userId.toString()), initialDate, finalDate);
@@ -166,8 +166,8 @@ class UserController {
   Future<Response> findExpensesByCategories(
       Request request, String userId, String categoryId) async {
     try {
-      final initialDate = request.url.queryParameters['datainicial'];
-      final finalDate = request.url.queryParameters['datafinal'];
+      final initialDate = request.url.queryParameters['initial_date'];
+      final finalDate = request.url.queryParameters['final_date'];
 
       final expensesByCategory = await service.findExpensesByCategories(
           int.parse(userId.toString()),

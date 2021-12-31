@@ -1,10 +1,11 @@
 class Category {
-  Category(
-      {required this.id,
-      required this.description,
-      required this.iconCode,
-      required this.colorCode,
-      this.userId});
+  Category({
+    required this.id,
+    required this.description,
+    required this.iconCode,
+    required this.colorCode,
+    this.userId,
+  });
 
   final int id;
   final String description;

@@ -8,7 +8,7 @@ class CorsMiddlewares extends Middlewares {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST,PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Header':
-        '${HttpHeaders.contentTypeHeader}, ${HttpHeaders.authorizationHeader}'
+        '${HttpHeaders.contentTypeHeader}, ${HttpHeaders.authorizationHeader}',
   };
 
   @override

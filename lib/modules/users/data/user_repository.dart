@@ -267,26 +267,49 @@ class UserRepository implements IUserRepository {
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''
-              SELECT tab.id_categoria,
-                     tab.descricao, 
-                     tab.valor_total_categoria,
-                     ROUND(((tab.valor_total_categoria / tab.total_geral) * 100), 2) AS percentual_categoria
-              FROM
-              (SELECT 
-                  c.id_categoria,
-                  c.descricao,
-                  SUM(d.valor) AS valor_total_categoria,
-                  SUM(d.valor) over (partition by null) as total_geral
-              FROM
-                  despesa d
-                      INNER JOIN
-                  categoria c ON (d.id_categoria = c.id_categoria)
-              WHERE
-                  d.id_usuario = ?
-                      AND d.data BETWEEN ? AND ?
-              GROUP BY c.id_categoria , c.descricao , d.valor
-              ) tab
-              ORDER BY percentual_categoria DESC
+                SELECT
+                    tab.id_categoria,
+                    tab.descricao,
+                    tab.valor_total_categoria,
+                    round(
+                        ((tab.valor_total_categoria / tab.valor_total_geral) * 100), 2
+                    ) AS percentual_categoria
+                FROM
+                    (
+                        SELECT
+                            tab.id_categoria,
+                            tab.descricao,
+                            tab.valor_total_categoria,
+                            SUM(tab.valor_total_categoria)
+                            OVER() AS valor_total_geral
+                        FROM
+                            (
+                                SELECT
+                                    c.id_categoria,
+                                    c.descricao,
+                                    SUM(d.valor) AS valor_total_categoria
+                                FROM
+                                    despesa d
+                                    INNER JOIN categoria c ON ( d.id_categoria = c.id_categoria and d.id_usuario = c.id_usuario)
+                                WHERE
+                                    d.id_usuario = ?
+                                    AND d.data BETWEEN ? AND ?
+                                GROUP BY
+                                    c.id_categoria,
+                                    c.descricao,
+                                    d.valor
+                            ) tab
+                        GROUP BY
+                            tab.id_categoria,
+                            tab.descricao,
+                            tab.valor_total_categoria
+                    ) tab
+                GROUP BY
+                    tab.id_categoria,
+                    tab.descricao,
+                    tab.valor_total_categoria
+                ORDER BY
+                    percentual_categoria DESC
       
       ''',
           [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
