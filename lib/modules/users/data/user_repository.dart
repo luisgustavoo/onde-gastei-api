@@ -227,7 +227,7 @@ class UserRepository implements IUserRepository {
       conn = await connection.openConnection();
       final result = await conn.query('''
           SELECT 
-              c.id_categoria, c.descricao, SUM(d.valor) AS valor_total
+              c.id_categoria, c.descricao, c.codigo_cor, c.codigo_icone, SUM(d.valor) AS valor_total
           FROM
               despesa d
                   INNER JOIN
@@ -243,10 +243,17 @@ class UserRepository implements IUserRepository {
 
       if (result.isNotEmpty) {
         return result
-            .map((d) => UserExpensesByCategoriesViewModel(
+            .map(
+              (d) => UserExpensesByCategoriesViewModel(
                 categoryId: int.parse(d['id_categoria'].toString()),
                 description: d['descricao'].toString(),
-                totalValue: double.parse(d['valor_total'].toString())))
+                categoryIconCode: int.parse(d['codigo_icone'].toString()),
+                categoryColorCode: int.parse(d['codigo_cor'].toString()),
+                totalValue: double.parse(
+                  d['valor_total'].toString(),
+                ),
+              ),
+            )
             .toList();
       }
 

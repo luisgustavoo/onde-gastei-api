@@ -309,7 +309,11 @@ void main() {
       final initialDate = DateTime.parse('2021-09-28');
       final finalDate = DateTime.parse('2021-09-28');
       final expenseByCategoriesExpected = UserExpensesByCategoriesViewModel(
-          categoryId: 1, description: 'Supermercado', totalValue: 15.5);
+          categoryId: 1,
+          description: 'Supermercado',
+          categoryIconCode: 63477,
+          categoryColorCode: 4294174197,
+          totalValue: 15.5);
       final jsonData = FixtureReader.getJsonData(
           'modules/users/data/fixture/find_total_expense_by_categories_success.json');
       final mockResults = MockResults(jsonData);
@@ -334,7 +338,6 @@ void main() {
       final expenseByCategories = await userRepository
           .findTotalExpensesByCategories(userId, initialDate, finalDate);
 
-
       //Assert
       expect(expenseByCategories, <UserExpensesByCategoriesViewModel>[]);
     });
@@ -349,7 +352,6 @@ void main() {
       //Act
 
       final call = userRepository.findTotalExpensesByCategories;
-
 
       //Assert
       expect(call(userId, initialDate, finalDate),

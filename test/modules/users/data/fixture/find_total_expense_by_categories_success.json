@@ -1,5 +1,7 @@
 {
   "id_categoria": 1,
   "descricao": "Supermercado",
+  "codigo_icone": 63477,
+  "codigo_cor": 4294174197,
   "valor_total": 15.5
 }
