@@ -68,7 +68,6 @@ void main() {
       const name = 'Luis Gustavo';
       const email = 'luisgustavovieirasantos@gmail.com';
       const password = '123132';
-      database.mockQueryException();
       final exception = MockMysqlException();
       when(() => exception.message).thenReturn('usuario.email_UNIQUE');
       database.mockQueryException(mockException: exception);
