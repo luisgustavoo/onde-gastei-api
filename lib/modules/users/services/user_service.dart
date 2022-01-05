@@ -97,6 +97,8 @@ class UserService implements IUserService {
 
       JwtHelper.getClaims(validateRefreshToken.last)
           .validate(issuer: accessToken);
+    } on ServiceException {
+      rethrow;
     } on JwtException catch (e, s) {
       log.error('Refresh token invalido', e, s);
       throw const ServiceException('Erro ao validar refresh token');

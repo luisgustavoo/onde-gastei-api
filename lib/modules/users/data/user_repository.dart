@@ -195,7 +195,8 @@ class UserRepository implements IUserRepository {
 
       if (result.isNotEmpty) {
         return result
-            .map((d) => UserExpenseByPeriodViewModel(
+            .map(
+              (d) => UserExpenseByPeriodViewModel(
                 expenseId: int.parse(d['id_despesa'].toString()),
                 description: d['descricao'].toString(),
                 value: double.parse(d['valor'].toString()),
@@ -205,7 +206,9 @@ class UserRepository implements IUserRepository {
                   description: d['descricao_categoria'].toString(),
                   iconCode: int.parse(d['codigo_icone'].toString()),
                   colorCode: int.parse(d['codigo_cor'].toString()),
-                )))
+                ),
+              ),
+            )
             .toList();
       }
 
