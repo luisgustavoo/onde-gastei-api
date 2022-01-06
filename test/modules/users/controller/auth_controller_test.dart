@@ -4,6 +4,7 @@ import 'package:dotenv/dotenv.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
+import 'package:onde_gastei_api/helpers/jwt_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/controllers/auth_controller.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
@@ -165,6 +166,47 @@ void main() {
           responseData['message'].toString().contains('Erro ao realizar login'),
           true);
       verify(() => service.login(any())).called(1);
+    });
+  });
+
+  group('Group confirmLogin', () {
+    test('Should confirmLogin with success', () async {
+      //Arrange
+      const userId = 1;
+      final refreshTokenExpected = JwtHelper.generateJwt(userId);
+
+      when(() => request.headers)
+          .thenReturn(<String, String>{'user': userId.toString()});
+      when(() => service.confirmLogin(any(), any()))
+          .thenAnswer((_) async => refreshTokenExpected);
+
+      //Act
+      final response = await authController.confirmLogin(request);
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+
+      expect(response.statusCode, 200);
+      expect(responseData['access_token'], isNotEmpty);
+      expect(responseData['refresh_token'], isNotEmpty);
+      expect(responseData['refresh_token'], refreshTokenExpected);
+      verify(() => service.confirmLogin(any(), any())).called(1);
+    });
+
+    test('Should throws Exception', () async {
+      //Arrange
+      const userId = 1;
+
+      when(() => request.headers)
+          .thenReturn(<String, String>{'user': userId.toString()});
+      when(() => service.confirmLogin(any(), any())).thenThrow(Exception());
+
+      //Act
+      final response = await authController.confirmLogin(request);
+
+      //Assert
+      expect(response.statusCode, 500);
     });
   });
 }
