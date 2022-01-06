@@ -8,6 +8,7 @@ import 'package:onde_gastei_api/helpers/jwt_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/controllers/auth_controller.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
+import 'package:onde_gastei_api/modules/users/view_model/refresh_token_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:shelf/shelf.dart';
@@ -39,7 +40,7 @@ void main() {
     registerFallbackValue(MockUserLoginInputModel());
   });
 
-  group('Group createUser', () {
+  group('Group test createUser', () {
     test('Should createUser with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
@@ -115,7 +116,7 @@ void main() {
     });
   });
 
-  group('Group login', () {
+  group('Group test login', () {
     test('Should login with succes', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
@@ -169,7 +170,7 @@ void main() {
     });
   });
 
-  group('Group confirmLogin', () {
+  group('Group test confirmLogin', () {
     test('Should confirmLogin with success', () async {
       //Arrange
       const userId = 1;
@@ -207,6 +208,76 @@ void main() {
 
       //Assert
       expect(response.statusCode, 500);
+    });
+  });
+
+  group('Group test refresToken', () {
+    test('Should refresToken with success', () async {
+      //Arrange
+      const userId = 1;
+      final dataRequestFixture = FixtureReader.getJsonData(
+          'modules/users/controller/fixture/refresh_token_request.json');
+      final accessToken = JwtHelper.generateJwt(userId);
+      final refreshToken = JwtHelper.generateJwt(userId);
+
+      when(() => request.headers).thenReturn(<String, String>{
+        'user': userId.toString(),
+        'access_token': accessToken
+      });
+
+      when(() => request.readAsString())
+          .thenAnswer((_) async => dataRequestFixture);
+
+      when(() => service.refreshToken(any(), any(), any())).thenAnswer(
+          (_) async => RefreshTokenViewModel(
+              accessToken: accessToken, refreshToken: refreshToken));
+      //Act
+      final response = await authController.refresToken(request);
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+      expect(response.statusCode, 200);
+      expect(responseData['access_token'], isNotEmpty);
+      expect(responseData['refresh_token'], isNotEmpty);
+      expect(
+          responseData['access_token'].toString().contains(accessToken), true);
+      expect(responseData['refresh_token'].toString().contains(refreshToken),
+          true);
+      verify(() => service.refreshToken(any(), any(), any())).called(1);
+    });
+
+    test('Should throws Exception', () async {
+      //Arrange
+      const userId = 1;
+      final dataRequestFixture = FixtureReader.getJsonData(
+          'modules/users/controller/fixture/refresh_token_request.json');
+      final accessToken = JwtHelper.generateJwt(userId);
+
+      when(() => request.headers).thenReturn(<String, String>{
+        'user': userId.toString(),
+        'access_token': accessToken
+      });
+
+      when(() => request.readAsString())
+          .thenAnswer((_) async => dataRequestFixture);
+
+      when(() => service.refreshToken(any(), any(), any()))
+          .thenThrow(Exception());
+      //Act
+      final response = await authController.refresToken(request);
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+
+      expect(response.statusCode, 500);
+      expect(
+          responseData['message']
+              .toString()
+              .contains('Erro ao atualizar access token'),
+          true);
+      verify(() => service.refreshToken(any(), any(), any())).called(1);
     });
   });
 }

@@ -97,7 +97,7 @@ void main() {
     });
   });
 
-  group('group test login', () {
+  group('Group test login', () {
     test('Should login with success', () async {
       //Arrange
       const name = 'Bla bla';
@@ -206,7 +206,7 @@ void main() {
     });
   });
 
-  group('Group findCategoriesByUserId', () {
+  group('Group test findCategoriesByUserId', () {
     test('Should findCategoriesByUserId with success', () async {
       //Arrange
       const userId = 1;
@@ -256,7 +256,7 @@ void main() {
     });
   });
 
-  group('Group findExpenseByPeriod ', () {
+  group('Group test findExpenseByPeriod ', () {
     test('Should findExpenseByPeriod with success', () async {
       //Arrange
       const userId = 1;
@@ -332,7 +332,7 @@ void main() {
     });
   });
 
-  group('Group findTotalExpensesByCategories', () {
+  group('Group test findTotalExpensesByCategories', () {
     test('Should findTotalExpensesByCategories with success', () async {
       //Arrange
       const userId = 1;
@@ -404,7 +404,7 @@ void main() {
     });
   });
 
-  group('Group findPercentageByCategories', () {
+  group('Group test findPercentageByCategories', () {
     test('Should findPercentageByCategories with success', () async {
       //Arrange
       const userId = 1;
@@ -475,7 +475,7 @@ void main() {
     });
   });
 
-  group('Group findExpensesByCategories', () {
+  group('Group test findExpensesByCategories', () {
     test('Should findExpensesByCategories with success', () async {
       //Arrange
       const userId = 1;
@@ -555,7 +555,7 @@ void main() {
     });
   });
 
-  group('Group confirmLogin', () {
+  group('Group test confirmLogin', () {
     test('Should confirmLogin with success', () async {
       //Arrange
       const userId = 1;
@@ -591,7 +591,7 @@ void main() {
     });
   });
 
-  group('Group refreshToken', () {
+  group('Group test refreshToken', () {
     test('Should refreshToken with success', () async {
       //Arrange
       env['refresh_token_not_before_hours'] = '0';

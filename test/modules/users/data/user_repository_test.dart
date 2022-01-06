@@ -236,7 +236,7 @@ void main() {
     });
   });
 
-  group('group test findExpenseByUserIdAndPeriod', () {
+  group('Group test findExpenseByUserIdAndPeriod', () {
     test('Should expenses by user id and period success', () async {
       // Arrange
       const userId = 1;
@@ -421,7 +421,7 @@ void main() {
     });
   });
 
-  group('Group findExpensesByCategory', () {
+  group('Group test findExpensesByCategory', () {
     test('Should expenses by category with success', () async {
       // Arrange
       const userId = 1;
