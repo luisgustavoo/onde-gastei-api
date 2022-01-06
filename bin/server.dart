@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
@@ -32,5 +33,6 @@ Future<void> main(List<String> args) async {
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final server = await serve(_handler, ip, port);
   //Log().debug('Server listening on port ${server.port}');
-  print('Server listening on port ${server.port}');
+  developer.log('Server listening on port ${server.port}');
+  //print('Server listening on port ${server.port}');
 }

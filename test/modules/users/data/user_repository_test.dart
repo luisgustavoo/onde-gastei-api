@@ -11,11 +11,11 @@ import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_
 import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
 import 'package:test/test.dart';
 
-import '../../core/fixture/fixture_reader.dart';
-import '../../core/log/mock_logger.dart';
-import '../../core/mysql/mock_database_connection.dart';
-import '../../core/mysql/mock_mysql_exception.dart';
-import '../../core/mysql/mock_results.dart';
+import '../../../core/fixture/fixture_reader.dart';
+import '../../../core/log/mock_logger.dart';
+import '../../../core/mysql/mock_database_connection.dart';
+import '../../../core/mysql/mock_mysql_exception.dart';
+import '../../../core/mysql/mock_results.dart';
 
 void main() {
   late MockDatabaseConnection database;

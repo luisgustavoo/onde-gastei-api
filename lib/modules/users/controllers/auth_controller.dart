@@ -28,9 +28,9 @@ class AuthController {
           name: dataRequest['name'].toString(),
           email: dataRequest['email'].toString(),
           password: dataRequest['password'].toString());
-      await service.createUser(userInputModel);
-      return Response.ok(
-          jsonEncode({'message': 'Cadastro realizado com sucesso!'}));
+      final userId = await service.createUser(userInputModel);
+      return Response.ok(jsonEncode(
+          {'message': 'Cadastro realizado com sucesso! Id: $userId'}));
     } on UserExistsException {
       return Response(400,
           body: jsonEncode({'message': 'Usuário já cadastrado'}));

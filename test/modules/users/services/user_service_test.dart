@@ -1,5 +1,4 @@
 import 'package:dotenv/dotenv.dart';
-import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
@@ -20,7 +19,7 @@ import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.d
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-import '../../core/log/mock_logger.dart';
+import '../../../core/log/mock_logger.dart';
 
 class MockUserRepository extends Mock implements IUserRepository {}
 
