@@ -60,7 +60,7 @@ class CategoryController {
     } on Exception catch (e, s) {
       log.error('Erro ao atualizar categoria', e, s);
       return Response.internalServerError(
-          body: {'message': 'Erro ao atualizar categoria'});
+          body: jsonEncode({'message': 'Erro ao atualizar categoria'}));
     }
   }
 
