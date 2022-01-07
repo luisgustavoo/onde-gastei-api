@@ -131,4 +131,42 @@ void main() {
       verify(() => service.updateExpenseById(any(), any())).called(1);
     });
   });
+
+  group('Geoup test deleteExpenseById', () {
+    test('Should deleteExpenseById with success', () async {
+      //Arrange
+      when(() => service.deleteExpenseById(any())).thenAnswer((_) async => _);
+      //Act
+      final response = await expensesController.deleteExpenseById(request, '1');
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+      expect(response.statusCode, 200);
+      expect(
+          responseData['message']
+              .toString()
+              .contains('Despesa deletada com sucesso'),
+          isTrue);
+      verify(() => service.deleteExpenseById(any())).called(1);
+    });
+
+    test('Should throws Exception', () async {
+      //Arrange
+      when(() => service.deleteExpenseById(any())).thenThrow(Exception());
+      //Act
+      final response = await expensesController.deleteExpenseById(request, '1');
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+      expect(response.statusCode, 500);
+      expect(
+          responseData['message']
+              .toString()
+              .contains('Erro ao deletar despesa'),
+          isTrue);
+      verify(() => service.deleteExpenseById(any())).called(1);
+    });
+  });
 }
