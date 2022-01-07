@@ -18,7 +18,7 @@ import 'package:test/scaffolding.dart';
 import '../../../core/fixture/fixture_reader.dart';
 import '../../../core/log/mock_logger.dart';
 import '../../../core/shelf/mock_shelf_request.dart';
-import 'mock/mock_ser_service.dart';
+import 'mock/mock_user_service.dart';
 
 class MockUserSaveInputModel extends Mock implements UserSaveInputModel {}
 
