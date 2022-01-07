@@ -93,4 +93,29 @@ void main() {
       verify(() => repository.updateCategoryById(any(), any())).called(1);
     });
   });
+
+  group('Group test deleteCategoryById', () {
+    test('Should deleteCategoryById with success', () async {
+      //Arrange
+      when(() => repository.deleteCategoryById(any()))
+          .thenAnswer((_) async => _);
+      //Act
+      await categoryService.deleteCategoryById(1);
+
+      //Assert
+      verify(() => repository.deleteCategoryById(any())).called(1);
+    });
+
+    test('Should throws DatabaseException', () async {
+      //Arrange
+      when(() => repository.deleteCategoryById(any()))
+          .thenThrow(DatabaseException());
+      //Act
+      final call = categoryService.deleteCategoryById;
+
+      //Assert
+      expect(() => call(1), throwsA(isA<DatabaseException>()));
+      verify(() => repository.deleteCategoryById(any())).called(1);
+    });
+  });
 }
