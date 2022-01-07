@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/exceptions/database_exception.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/categories/data/i_category_repository.dart';
 import 'package:onde_gastei_api/modules/categories/services/category_service.dart';
 import 'package:onde_gastei_api/modules/categories/view_model/category_save_input_model.dart';
+import 'package:onde_gastei_api/modules/categories/view_model/category_update_input_model.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
@@ -13,6 +16,9 @@ class MockCategoryRepository extends Mock implements ICategoryRepository {}
 
 class MockCategorySaveInputModel extends Mock
     implements CategorySaveInputModel {}
+
+class MockCategoryUpdateInputModel extends Mock
+    implements CategoryUpdateInputModel {}
 
 void main() {
   late ICategoryRepository repository;
@@ -24,6 +30,7 @@ void main() {
     log = MockLogger();
     categoryService = CategoryService(repository: repository, log: log);
     registerFallbackValue(MockCategorySaveInputModel());
+    registerFallbackValue(MockCategoryUpdateInputModel());
   });
 
   group('Group test createCategory', () {
@@ -54,6 +61,36 @@ void main() {
       expect(() => call(categorySaveInputModel),
           throwsA(isA<DatabaseException>()));
       verify(() => repository.createCategory(any())).called(1);
+    });
+  });
+
+  group('Group test updateCategoryById', () {
+    test('Should updateCategoryById with success', () async {
+      //Arrange
+      final categoryUpdateInputModel = CategoryUpdateInputModel(
+          description: 'Bla bla', iconCode: 1, colorCode: 1);
+      when(() => repository.updateCategoryById(any(), any()))
+          .thenAnswer((_) async => _);
+      //Act
+      await categoryService.updateCategoryById(1, categoryUpdateInputModel);
+
+      //Assert
+      verify(() => repository.updateCategoryById(any(), any())).called(1);
+    });
+
+    test('Should throws DatabaseException', () async {
+      //Arrange
+      final categoryUpdateInputModel = CategoryUpdateInputModel(
+          description: 'Bla bla', iconCode: 1, colorCode: 1);
+      when(() => repository.updateCategoryById(any(), any()))
+          .thenThrow(DatabaseException());
+      //Act
+      final call = categoryService.updateCategoryById;
+
+      //Assert
+      expect(() => call(1, categoryUpdateInputModel),
+          throwsA(isA<DatabaseException>()));
+      verify(() => repository.updateCategoryById(any(), any())).called(1);
     });
   });
 }
