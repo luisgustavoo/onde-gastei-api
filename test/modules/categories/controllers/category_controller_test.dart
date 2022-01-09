@@ -129,4 +129,42 @@ void main() {
       verify(() => service.updateCategoryById(any(), any())).called(1);
     });
   });
+
+  group('Group test deleteCategoryById', () {
+    test('Should deleteCategoryById with succes', () async {
+      //Arrange
+      when(() => service.deleteCategoryById(any())).thenAnswer((_) async => _);
+      //Act
+      final response = await controller.deleteCategoryById(request, '1');
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+      expect(response.statusCode, 200);
+      expect(
+          responseData['message']
+              .toString()
+              .contains('Categoria deletada com sucesso'),
+          isTrue);
+      verify(() => service.deleteCategoryById(any())).called(1);
+    });
+
+    test('Should throws Exception', () async {
+      //Arrange
+      when(() => service.deleteCategoryById(any())).thenThrow(Exception());
+      //Act
+      final response = await controller.deleteCategoryById(request, '1');
+
+      //Assert
+      final responseData =
+          jsonDecode(await response.readAsString()) as Map<String, dynamic>;
+      expect(response.statusCode, 500);
+      expect(
+          responseData['message']
+              .toString()
+              .contains('Erro ao deletar categoria'),
+          isTrue);
+      verify(() => service.deleteCategoryById(any())).called(1);
+    });
+  });
 }
