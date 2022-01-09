@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/exceptions/database_exception.dart';

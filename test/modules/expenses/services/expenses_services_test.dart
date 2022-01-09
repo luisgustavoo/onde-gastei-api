@@ -7,8 +7,6 @@ import 'package:onde_gastei_api/modules/expenses/view_model/expense_update_input
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-import '../../../core/fixture/fixture_reader.dart';
-
 class MockExpenseRepository extends Mock implements IExpenseRepository {}
 
 void main() {
