@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
+
 import 'package:onde_gastei_api/entities/category.dart';
 
 class UserExpenseByPeriodViewModel {
