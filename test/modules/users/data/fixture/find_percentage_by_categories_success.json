@@ -1,8 +1,10 @@
 [
   {
     "id_categoria": 1,
-    "descricao": "Supermercado",
-    "valor_total_categoria": 150.5,
-    "percentual_categoria": 60.08
+    "descricao": "Test",
+    "codigo_icone": 1,
+    "codigo_cor": 1,
+    "valor_total": 1,
+    "percentual": 1
   }
 ]

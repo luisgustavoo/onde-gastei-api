@@ -1,7 +1,9 @@
-{
-  "id_categoria": 1,
-  "descricao": "Supermercado",
-  "codigo_icone": 63477,
-  "codigo_cor": 4294174197,
-  "valor_total": 15.5
-}
+[
+  {
+    "id_categoria": 1,
+    "descricao": "Test",
+    "codigo_icone": 1,
+    "codigo_cor": 1,
+    "valor_total": 1
+  }
+]

@@ -1,36 +1,27 @@
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 
+import 'package:onde_gastei_api/entities/category.dart';
+
 class UserExpensesByCategoriesViewModel {
   UserExpensesByCategoriesViewModel({
-    required this.categoryId,
-    required this.description,
-    required this.categoryIconCode,
-    required this.categoryColorCode,
     required this.totalValue,
+    required this.category,
   });
 
-  final int categoryId;
-  final String description;
-  final int categoryIconCode;
-  final int categoryColorCode;
   final double totalValue;
+  final Category category;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserExpensesByCategoriesViewModel &&
-          runtimeType == other.runtimeType &&
-          categoryId == other.categoryId &&
-          description == other.description &&
-          categoryIconCode == other.categoryIconCode &&
-          categoryColorCode == other.categoryColorCode &&
-          totalValue == other.totalValue;
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is UserExpensesByCategoriesViewModel &&
+        other.totalValue == totalValue &&
+        other.category == category;
+  }
 
   @override
-  int get hashCode =>
-      categoryId.hashCode ^
-      description.hashCode ^
-      categoryIconCode.hashCode ^
-      categoryColorCode.hashCode ^
-      totalValue.hashCode;
+  int get hashCode => totalValue.hashCode ^ category.hashCode;
 }

@@ -308,11 +308,14 @@ void main() {
       final initialDate = DateTime.parse('2021-09-28');
       final finalDate = DateTime.parse('2021-09-28');
       final expenseByCategoriesExpected = UserExpensesByCategoriesViewModel(
-          categoryId: 1,
-          description: 'Supermercado',
-          categoryIconCode: 63477,
-          categoryColorCode: 4294174197,
-          totalValue: 15.5);
+        totalValue: 1,
+        category: Category(
+          id: 1,
+          description: 'Test',
+          iconCode: 1,
+          colorCode: 1,
+        ),
+      );
       final jsonData = FixtureReader.getJsonData(
           'modules/users/data/fixture/find_total_expense_by_categories_success.json');
       final mockResults = MockResults(jsonData);
@@ -372,10 +375,15 @@ void main() {
       database.mockQuery(mockResults);
       final userCategoriesPercentageExpected =
           UserCategoriesByPercentageViewModel(
-              categoryId: 1,
-              description: 'Supermercado',
-              categoryValue: 150.5,
-              categoryPercentage: 60.08);
+        value: 1,
+        percentage: 1,
+        category: Category(
+          id: 1,
+          description: 'Test',
+          iconCode: 1,
+          colorCode: 1,
+        ),
+      );
 
       //Act
       final userCategoriesPercentage = await userRepository

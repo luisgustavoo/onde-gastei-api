@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
+import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/helpers/jwt_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
@@ -55,10 +56,19 @@ class AuthController {
 
       return Response.ok(
           jsonEncode({'access_token': JwtHelper.generateJwt(user.id)}));
+    } on UserNotFoundException {
+      return Response.forbidden(
+        jsonEncode(
+          {'message': 'Usuário e senha inválidos'},
+        ),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao fazer login', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao realizar login'}));
+        body: jsonEncode(
+          {'message': 'Erro ao realizar login'},
+        ),
+      );
     }
   }
 

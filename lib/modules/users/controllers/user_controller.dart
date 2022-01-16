@@ -117,11 +117,17 @@ class UserController {
           int.parse(userId.toString()), initialDate, finalDate);
 
       final expenseByCategoriesMapped = expenseByCategories
-          .map((d) => {
-                'id_categoria': d.categoryId,
-                'descricao': d.description,
-                'valor_total': d.totalValue
-              })
+          .map(
+            (d) => {
+              'valor_total': d.totalValue,
+              'category': {
+                'id_categoria': d.category.id,
+                'descricao': d.category.description,
+                'codigo_icone': d.category.iconCode,
+                'codigo_cor': d.category.colorCode,
+              }
+            },
+          )
           .toList();
 
       return Response.ok(jsonEncode(expenseByCategoriesMapped));
@@ -146,10 +152,14 @@ class UserController {
 
       final userCategoriesPercentageMapped = userCategoriesPercentage
           .map((c) => {
-                'id_categoria': c.categoryId,
-                'descricao': c.description,
-                'valor_total_categoria': c.categoryValue,
-                'percentual_categoria': c.categoryPercentage,
+                'valor': c.value,
+                'percentual': c.percentage,
+                'categoria': {
+                  'id_categoria': c.category.id,
+                  'descricao': c.category.description,
+                  'codigo_icone': c.category.iconCode,
+                  'codigo_cor': c.category.colorCode
+                }
               })
           .toList();
 

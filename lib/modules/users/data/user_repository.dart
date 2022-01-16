@@ -63,6 +63,8 @@ class UserRepository implements IUserRepository {
             name: userData['nome'].toString(),
             email: userData['email'].toString());
       }
+    } on UserNotFoundException {
+      rethrow;
     } on MySqlException catch (e, s) {
       log.error('Erro ao fazer login', e, s);
       throw DatabaseException();
@@ -147,12 +149,15 @@ class UserRepository implements IUserRepository {
 
       if (result.isNotEmpty) {
         return result
-            .map((c) => Category(
+            .map(
+              (c) => Category(
                 id: int.parse(c['id_categoria'].toString()),
                 description: c['descricao'].toString(),
                 iconCode: int.parse(c['codigo_icone'].toString()),
                 colorCode: int.parse(c['codigo_cor'].toString()),
-                userId: userId))
+                userId: userId,
+              ),
+            )
             .toList();
       }
 
@@ -230,7 +235,8 @@ class UserRepository implements IUserRepository {
       conn = await connection.openConnection();
       final result = await conn.query('''
           SELECT 
-              c.id_categoria, c.descricao, c.codigo_cor, c.codigo_icone, SUM(d.valor) AS valor_total
+              c.id_categoria, c.descricao, c.codigo_icone, 
+              c.codigo_cor,  SUM(d.valor) AS valor_total
           FROM
               despesa d
                   INNER JOIN
@@ -248,12 +254,12 @@ class UserRepository implements IUserRepository {
         return result
             .map(
               (d) => UserExpensesByCategoriesViewModel(
-                categoryId: int.parse(d['id_categoria'].toString()),
-                description: d['descricao'].toString(),
-                categoryIconCode: int.parse(d['codigo_icone'].toString()),
-                categoryColorCode: int.parse(d['codigo_cor'].toString()),
-                totalValue: double.parse(
-                  d['valor_total'].toString(),
+                totalValue: double.parse(d['valor_total'].toString()),
+                category: Category(
+                  id: int.parse(d['id_categoria'].toString()),
+                  description: d['descricao'].toString(),
+                  iconCode: int.parse(d['codigo_icone'].toString()),
+                  colorCode: int.parse(d['codigo_cor'].toString()),
                 ),
               ),
             )
@@ -280,24 +286,28 @@ class UserRepository implements IUserRepository {
                 SELECT
                     tab.id_categoria,
                     tab.descricao,
-                    tab.valor_total_categoria,
-                    round(
-                        ((tab.valor_total_categoria / tab.valor_total_geral) * 100), 2
-                    ) AS percentual_categoria
+                    tab.codigo_icone,
+				          	tab.codigo_cor,
+                    tab.valor_total,
+                    round( ((tab.valor_total / tab.valor_total_geral) * 100), 2) AS percentual
+
                 FROM
                     (
                         SELECT
                             tab.id_categoria,
                             tab.descricao,
-                            tab.valor_total_categoria,
-                            SUM(tab.valor_total_categoria)
-                            OVER() AS valor_total_geral
+                            tab.codigo_icone,
+                            tab.codigo_cor,
+                            tab.valor_total,
+                            SUM(tab.valor_total) OVER() AS valor_total_geral
                         FROM
                             (
                                 SELECT
-                                    c.id_categoria,
-                                    c.descricao,
-                                    SUM(d.valor) AS valor_total_categoria
+                                    c.id_categoria, 
+                                    c.descricao, 
+                                    c.codigo_icone, 
+                                    c.codigo_cor,
+                                    SUM(d.valor) AS valor_total
                                 FROM
                                     despesa d
                                     INNER JOIN categoria c ON ( d.id_categoria = c.id_categoria and d.id_usuario = c.id_usuario)
@@ -307,39 +317,49 @@ class UserRepository implements IUserRepository {
                                 GROUP BY
                                     c.id_categoria,
                                     c.descricao,
+                                    c.codigo_icone, 
+                                    c.codigo_cor,
                                     d.valor
                             ) tab
                         GROUP BY
                             tab.id_categoria,
                             tab.descricao,
-                            tab.valor_total_categoria
+                            tab.codigo_icone,
+                            tab.codigo_cor,
+                            tab.valor_total
                     ) tab
                 GROUP BY
                     tab.id_categoria,
                     tab.descricao,
-                    tab.valor_total_categoria
+                    tab.codigo_icone,
+                    tab.codigo_cor,
+                    tab.valor_total
                 ORDER BY
-                    percentual_categoria DESC
+                    percentual DESC
       
       ''',
           [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
 
       if (result.isNotEmpty) {
         return result
-            .map((c) => UserCategoriesByPercentageViewModel(
-                categoryId: int.parse(c['id_categoria'].toString()),
-                description: c['descricao'].toString(),
-                categoryValue:
-                    double.parse(c['valor_total_categoria'].toString()),
-                categoryPercentage: double.parse(
-                  c['percentual_categoria'].toString(),
-                )))
+            .map(
+              (c) => UserCategoriesByPercentageViewModel(
+                value: double.parse(c['valor_total'].toString()),
+                percentage: double.parse(c['percentual'].toString()),
+                category: Category(
+                  id: int.parse(c['id_categoria'].toString()),
+                  description: c['descricao'].toString(),
+                  iconCode: int.parse(c['codigo_icone'].toString()),
+                  colorCode: int.parse(c['codigo_cor'].toString()),
+                ),
+              ),
+            )
             .toList();
       }
 
       return <UserCategoriesByPercentageViewModel>[];
     } on MySqlException catch (e, s) {
-      log.error('Erro ao buscar despesas por categorias', e, s);
+      log.error('Erro ao buscar percentual de despesas por categorias', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();

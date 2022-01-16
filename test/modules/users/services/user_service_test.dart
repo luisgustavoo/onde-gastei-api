@@ -341,11 +341,10 @@ void main() {
 
       final userExpensesByCategoriesListExpected = [
         UserExpensesByCategoriesViewModel(
-            categoryId: 1,
-            description: 'Bla bla',
-            totalValue: 1,
-            categoryIconCode: 1,
-            categoryColorCode: 1)
+          totalValue: 1,
+          category: Category(
+              id: 1, description: 'Test', iconCode: 1, colorCode: 1, userId: 1),
+        )
       ];
 
       when(() => userRepository.findTotalExpensesByCategories(
@@ -413,10 +412,15 @@ void main() {
 
       final userCategoriesByPercentageListExpected = [
         UserCategoriesByPercentageViewModel(
-            categoryId: 1,
-            description: 'Bla bla',
-            categoryValue: 1,
-            categoryPercentage: 1)
+          value: 1,
+          percentage: 1,
+          category: Category(
+            id: 1,
+            description: 'Test',
+            iconCode: 1,
+            colorCode: 1,
+          ),
+        )
       ];
 
       when(() => userRepository.findPercentageByCategories(

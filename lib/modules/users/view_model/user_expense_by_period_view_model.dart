@@ -3,12 +3,13 @@
 import 'package:onde_gastei_api/entities/category.dart';
 
 class UserExpenseByPeriodViewModel {
-  UserExpenseByPeriodViewModel(
-      {required this.expenseId,
-      required this.description,
-      required this.value,
-      required this.date,
-      required this.category});
+  UserExpenseByPeriodViewModel({
+    required this.expenseId,
+    required this.description,
+    required this.value,
+    required this.date,
+    required this.category,
+  });
 
   final int expenseId;
   final String description;

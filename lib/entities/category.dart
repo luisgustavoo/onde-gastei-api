@@ -16,21 +16,25 @@ class Category {
   final int? userId;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Category &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          description == other.description &&
-          iconCode == other.iconCode &&
-          colorCode == other.colorCode &&
-          userId == other.userId;
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is Category &&
+        other.id == id &&
+        other.description == description &&
+        other.iconCode == iconCode &&
+        other.colorCode == colorCode &&
+        other.userId == userId;
+  }
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      description.hashCode ^
-      iconCode.hashCode ^
-      colorCode.hashCode ^
-      userId.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        description.hashCode ^
+        iconCode.hashCode ^
+        colorCode.hashCode ^
+        userId.hashCode;
+  }
 }
