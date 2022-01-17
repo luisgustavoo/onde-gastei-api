@@ -120,7 +120,7 @@ class UserController {
           .map(
             (d) => {
               'valor_total': d.totalValue,
-              'category': {
+              'categoria': {
                 'id_categoria': d.category.id,
                 'descricao': d.category.description,
                 'codigo_icone': d.category.iconCode,
