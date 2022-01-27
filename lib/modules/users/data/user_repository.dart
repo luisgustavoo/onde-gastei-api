@@ -144,7 +144,8 @@ class UserRepository implements IUserRepository {
         FROM
             categoria
         WHERE
-            id_usuario = ?      
+            id_usuario = ?   
+        ORDER BY descricao       
       ''', [userId]);
 
       if (result.isNotEmpty) {

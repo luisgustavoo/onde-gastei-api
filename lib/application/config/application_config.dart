@@ -21,7 +21,7 @@ class ApplicationConfig {
   void _loadRoutersConfigure(Router router) =>
       RouterConfigure(router).configure();
 
-  void _configLogger() => GetIt.I.registerLazySingleton<ILog>(() => Log());
+  void _configLogger() => GetIt.I.registerLazySingleton<ILog>(Log.new);
 
   Future<void> _loadEnv() async => load();
 
