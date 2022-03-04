@@ -67,6 +67,7 @@ class UserController {
               'codigo_cor': c.colorCode,
             })
         .toList();
+
     return Response.ok(jsonEncode(categoriesMapped));
   }
 
@@ -89,7 +90,7 @@ class UserController {
                 'data': d.date.toIso8601String(),
                 'categoria': {
                   'id_categoria': d.category.id,
-                  'descricao_categoria': d.category.description,
+                  'descricao': d.category.description,
                   'codigo_icone': d.category.iconCode,
                   'codigo_cor': d.category.colorCode,
                 }

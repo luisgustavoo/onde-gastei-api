@@ -195,7 +195,7 @@ class UserRepository implements IUserRepository {
           WHERE
               d.id_usuario = ?
                   AND d.data BETWEEN ? AND ?      
-      
+          ORDER BY d.data DESC
       ''',
           [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
 
@@ -290,7 +290,7 @@ class UserRepository implements IUserRepository {
                     tab.codigo_icone,
 				          	tab.codigo_cor,
                     tab.valor_total,
-                    round( ((tab.valor_total / tab.valor_total_geral) * 100), 2) AS percentual
+                    SUM( ((tab.valor_total / tab.valor_total_geral) * 100) ) AS percentual
 
                 FROM
                     (
@@ -319,22 +319,22 @@ class UserRepository implements IUserRepository {
                                     c.id_categoria,
                                     c.descricao,
                                     c.codigo_icone, 
-                                    c.codigo_cor,
-                                    d.valor
+                                    c.codigo_cor
+                               
                             ) tab
                         GROUP BY
                             tab.id_categoria,
                             tab.descricao,
                             tab.codigo_icone,
-                            tab.codigo_cor,
-                            tab.valor_total
+                            tab.codigo_cor
+                  
                     ) tab
                 GROUP BY
                     tab.id_categoria,
                     tab.descricao,
                     tab.codigo_icone,
-                    tab.codigo_cor,
-                    tab.valor_total
+                    tab.codigo_cor
+  
                 ORDER BY
                     percentual DESC
       
@@ -395,7 +395,7 @@ class UserRepository implements IUserRepository {
               d.id_usuario = ?
                   AND c.id_categoria = ?
                   AND d.data BETWEEN ? AND ?      
-      
+          ORDER BY d.data DESC
       ''', [
         userId,
         categoryId,
