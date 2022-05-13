@@ -21,8 +21,12 @@ class SecurityMiddleware extends Middlewares {
   @override
   Future<Response> execute(Request request) async {
     try {
-      if (skipUrl.contains(SecuritySkipUrl(
-          url: '/${request.url.path}', method: request.method))) {
+      if (skipUrl.contains(
+        SecuritySkipUrl(
+          url: '/${request.url.path}',
+          method: request.method,
+        ),
+      )) {
         return innerHandler(request);
       }
 

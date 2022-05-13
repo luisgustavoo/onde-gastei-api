@@ -1,6 +1,9 @@
 class UserSaveInputModel {
-  UserSaveInputModel(
-      {required this.name, required this.email, required this.password});
+  UserSaveInputModel({
+    required this.name,
+    required this.email,
+    required this.password,
+  });
 
   final String name;
   final String email;

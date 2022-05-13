@@ -21,17 +21,18 @@ Future<void> main(List<String> args) async {
 
   final getIt = GetIt.I;
 
-  final _handler = const Pipeline()
+  final handler = const Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(SecurityMiddleware(getIt.get()).handler)
       .addMiddleware(
-          DefaultContentType('application/json;charset=utf-8').handler)
+        DefaultContentType('application/json;charset=utf-8').handler,
+      )
       .addMiddleware(CorsMiddlewares().handler)
       .addHandler(router);
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final server = await serve(_handler, ip, port);
+  final server = await serve(handler, ip, port);
   //Log().debug('Server listening on port ${server.port}');
   developer.log('Server listening on port ${server.port}');
   //print('Server listening on port ${server.port}');

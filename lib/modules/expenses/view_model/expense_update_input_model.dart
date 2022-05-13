@@ -1,9 +1,10 @@
 class ExpenseUpdateInputModel {
-  ExpenseUpdateInputModel(
-      {required this.description,
-      required this.value,
-      required this.date,
-      required this.categoryId});
+  ExpenseUpdateInputModel({
+    required this.description,
+    required this.value,
+    required this.date,
+    required this.categoryId,
+  });
 
   final String description;
   final double value;

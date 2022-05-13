@@ -5,7 +5,9 @@ abstract class IExpenseRepository {
   Future<int> createExpense(ExpenseSaveInputModel expenseSaveInputModel);
 
   Future<void> updateExpenseById(
-      int expenseId, ExpenseUpdateInputModel expenseUpdateInputModel);
+    int expenseId,
+    ExpenseUpdateInputModel expenseUpdateInputModel,
+  );
 
   Future<void> deleteExpenseById(int expenseId);
 }

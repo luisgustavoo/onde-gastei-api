@@ -41,7 +41,9 @@ class ExpenseRepository implements IExpenseRepository {
 
   @override
   Future<void> updateExpenseById(
-      int expenseId, ExpenseUpdateInputModel expenseUpdateInputModel) async {
+    int expenseId,
+    ExpenseUpdateInputModel expenseUpdateInputModel,
+  ) async {
     MySqlConnection? conn;
 
     try {
@@ -76,11 +78,14 @@ class ExpenseRepository implements IExpenseRepository {
 
     try {
       conn = await connection.openConnection();
-      await conn.query('''
+      await conn.query(
+        '''
         DELETE FROM despesa 
         WHERE
             id_despesa = ?   
-      ''', [expenseId]);
+      ''',
+        [expenseId],
+      );
     } on MySqlException catch (e, s) {
       log.error('Erro ao deletar despesa', e, s);
       throw DatabaseException();

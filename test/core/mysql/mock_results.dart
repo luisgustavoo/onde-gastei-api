@@ -10,10 +10,14 @@ class MockResults extends Mock implements Results {
     if (json != null) {
       final dynamic data = jsonDecode(json);
       if (data is List) {
-        _rows.addAll(data
-            .map((dynamic f) =>
-                MockResultRow(f as Map<String, dynamic>, blobFields))
-            .toList());
+        _rows.addAll(
+          data
+              .map(
+                (dynamic f) =>
+                    MockResultRow(f as Map<String, dynamic>, blobFields),
+              )
+              .toList(),
+        );
       } else {
         _rows.add(MockResultRow(data as Map<String, dynamic>, blobFields));
       }
@@ -33,7 +37,8 @@ class MockResults extends Mock implements Results {
 
   @override
   Iterable<T> map<T>(
-      T Function(ResultRow e) toElement) sync* {
+    T Function(ResultRow e) toElement,
+  ) sync* {
     for (final value in this) {
       yield toElement(value);
     }

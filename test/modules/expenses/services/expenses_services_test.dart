@@ -57,7 +57,9 @@ void main() {
 
       //Assert
       expect(
-          () => call(expenseSaveInputModel), throwsA(isA<DatabaseException>()));
+        () => call(expenseSaveInputModel),
+        throwsA(isA<DatabaseException>()),
+      );
       verify(() => repository.createExpense(expenseSaveInputModel)).called(1);
     });
   });
@@ -99,8 +101,10 @@ void main() {
       final call = expenseServices.updateExpenseById;
 
       //Assert
-      expect(() => call(1, expenseUpdateInputModel),
-          throwsA(isA<DatabaseException>()));
+      expect(
+        () => call(1, expenseUpdateInputModel),
+        throwsA(isA<DatabaseException>()),
+      );
       verify(() => repository.updateExpenseById(any(), expenseUpdateInputModel))
           .called(1);
     });

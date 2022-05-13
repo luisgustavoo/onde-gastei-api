@@ -40,7 +40,8 @@ void main() {
     test('Should createExpense with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/expenses/controller/fixture/create_expense_request.json');
+        'modules/expenses/controller/fixture/create_expense_request.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -61,7 +62,8 @@ void main() {
     test('Should throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/expenses/controller/fixture/create_expense_request.json');
+        'modules/expenses/controller/fixture/create_expense_request.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -76,8 +78,9 @@ void main() {
 
       expect(response.statusCode, 500);
       expect(
-          responseData['message'].toString().contains('Erro ao salvar despesa'),
-          true);
+        responseData['message'].toString().contains('Erro ao salvar despesa'),
+        true,
+      );
       verify(() => service.createExpense(any())).called(1);
     });
   });
@@ -86,7 +89,8 @@ void main() {
     test('Should updateExpenseById with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/expenses/controller/fixture/update_exepenses_by_id.json');
+        'modules/expenses/controller/fixture/update_exepenses_by_id.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -100,17 +104,19 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 200);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Despesa atualizada com sucesso'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Despesa atualizada com sucesso'),
+        isTrue,
+      );
       verify(() => service.updateExpenseById(any(), any())).called(1);
     });
 
     test('Should throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/expenses/controller/fixture/update_exepenses_by_id.json');
+        'modules/expenses/controller/fixture/update_exepenses_by_id.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -124,10 +130,11 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 500);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao atualizar despesa'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Erro ao atualizar despesa'),
+        isTrue,
+      );
       verify(() => service.updateExpenseById(any(), any())).called(1);
     });
   });
@@ -144,10 +151,11 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 200);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Despesa deletada com sucesso'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Despesa deletada com sucesso'),
+        isTrue,
+      );
       verify(() => service.deleteExpenseById(any())).called(1);
     });
 
@@ -162,10 +170,9 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 500);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao deletar despesa'),
-          isTrue);
+        responseData['message'].toString().contains('Erro ao deletar despesa'),
+        isTrue,
+      );
       verify(() => service.deleteExpenseById(any())).called(1);
     });
   });

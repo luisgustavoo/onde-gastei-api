@@ -18,9 +18,12 @@ class CategoryService implements ICategoryService {
 
   @override
   Future<void> updateCategoryById(
-          int categoryId, CategoryUpdateInputModel categoryUpdateInputModel) =>
+    int categoryId,
+    CategoryUpdateInputModel categoryUpdateInputModel,
+  ) =>
       repository.updateCategoryById(categoryId, categoryUpdateInputModel);
 
   @override
-  Future<void> deleteCategoryById(int categoryId) => repository.deleteCategoryById(categoryId);
+  Future<void> deleteCategoryById(int categoryId) =>
+      repository.deleteCategoryById(categoryId);
 }

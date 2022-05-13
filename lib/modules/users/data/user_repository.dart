@@ -26,9 +26,12 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
           insert into usuario(nome, email, senha) values (?, ?, ?)
-      ''', [name, email, CriptyHelper.generateSha256Hash(password)]);
+      ''',
+        [name, email, CriptyHelper.generateSha256Hash(password)],
+      );
 
       return result.insertId ?? 0;
     } on MySqlException catch (e, s) {
@@ -49,9 +52,12 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
          select id_usuario, nome, email from usuario where email = ? and senha = ?
-      ''', [email, CriptyHelper.generateSha256Hash(password)]);
+      ''',
+        [email, CriptyHelper.generateSha256Hash(password)],
+      );
 
       if (result.isEmpty) {
         log.error('usuario ou senha invalidos');
@@ -59,9 +65,10 @@ class UserRepository implements IUserRepository {
       } else {
         final userData = result.first;
         return User(
-            id: int.parse(userData['id_usuario'].toString()),
-            name: userData['nome'].toString(),
-            email: userData['email'].toString());
+          id: int.parse(userData['id_usuario'].toString()),
+          name: userData['nome'].toString(),
+          email: userData['email'].toString(),
+        );
       }
     } on UserNotFoundException {
       rethrow;
@@ -79,14 +86,17 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
       SELECT 
           id_usuario, nome, email
       FROM
           usuario
       WHERE
           id_usuario = ?
-      ''', [id]);
+      ''',
+        [id],
+      );
 
       if (result.isEmpty) {
         throw UserNotFoundException(message: 'Usuário não encontrado');
@@ -113,13 +123,16 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      await conn.query('''
+      await conn.query(
+        '''
         UPDATE usuario 
         SET 
             nome = ?
         WHERE
             id_usuario = ?     
-      ''', [name, userId]);
+      ''',
+        [name, userId],
+      );
     } on MySqlException catch (e, s) {
       log.error('Erro ao atualizar nome do usuario $userId', e, s);
       throw DatabaseException();
@@ -134,7 +147,8 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
         SELECT 
             id_categoria,
             descricao,
@@ -146,7 +160,9 @@ class UserRepository implements IUserRepository {
         WHERE
             id_usuario = ?   
         ORDER BY descricao       
-      ''', [userId]);
+      ''',
+        [userId],
+      );
 
       if (result.isNotEmpty) {
         return result
@@ -173,12 +189,16 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
-      int userId, DateTime initialDate, DateTime finalDate) async {
+    int userId,
+    DateTime initialDate,
+    DateTime finalDate,
+  ) async {
     MySqlConnection? conn;
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
           SELECT 
               d.id_despesa,
               d.descricao,
@@ -197,7 +217,8 @@ class UserRepository implements IUserRepository {
                   AND d.data BETWEEN ? AND ?      
           ORDER BY d.data DESC
       ''',
-          [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
+        [userId, initialDate.toIso8601String(), finalDate.toIso8601String()],
+      );
 
       if (result.isNotEmpty) {
         return result
@@ -229,12 +250,16 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<List<UserExpensesByCategoriesViewModel>> findTotalExpensesByCategories(
-      int userId, DateTime initialDate, DateTime finalDate) async {
+    int userId,
+    DateTime initialDate,
+    DateTime finalDate,
+  ) async {
     MySqlConnection? conn;
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
           SELECT 
               c.id_categoria, c.descricao, c.codigo_icone, 
               c.codigo_cor,  SUM(d.valor) AS valor_total
@@ -249,7 +274,8 @@ class UserRepository implements IUserRepository {
           ORDER BY valor_total DESC  
       
       ''',
-          [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
+        [userId, initialDate.toIso8601String(), finalDate.toIso8601String()],
+      );
 
       if (result.isNotEmpty) {
         return result
@@ -278,12 +304,16 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<List<UserCategoriesByPercentageViewModel>> findPercentageByCategories(
-      int userId, DateTime initialDate, DateTime finalDate) async {
+    int userId,
+    DateTime initialDate,
+    DateTime finalDate,
+  ) async {
     MySqlConnection? conn;
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
                 SELECT
                     tab.id_categoria,
                     tab.descricao,
@@ -339,7 +369,8 @@ class UserRepository implements IUserRepository {
                     percentual DESC
       
       ''',
-          [userId, initialDate.toIso8601String(), finalDate.toIso8601String()]);
+        [userId, initialDate.toIso8601String(), finalDate.toIso8601String()],
+      );
 
       if (result.isNotEmpty) {
         return result
@@ -369,10 +400,11 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
-      int userId,
-      int categoryId,
-      DateTime initialDate,
-      DateTime finalDate) async {
+    int userId,
+    int categoryId,
+    DateTime initialDate,
+    DateTime finalDate,
+  ) async {
     MySqlConnection? conn;
 
     try {
@@ -405,7 +437,8 @@ class UserRepository implements IUserRepository {
 
       if (result.isNotEmpty) {
         return result
-            .map((d) => UserExpenseByPeriodViewModel(
+            .map(
+              (d) => UserExpenseByPeriodViewModel(
                 expenseId: int.parse(d['id_despesa'].toString()),
                 description: d['descricao'].toString(),
                 value: double.parse(d['valor'].toString()),
@@ -415,7 +448,9 @@ class UserRepository implements IUserRepository {
                   description: d['descricao_categoria'].toString(),
                   iconCode: int.parse(d['codigo_icone'].toString()),
                   colorCode: int.parse(d['codigo_cor'].toString()),
-                )))
+                ),
+              ),
+            )
             .toList();
       }
 
@@ -434,13 +469,16 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      await conn.query('''
+      await conn.query(
+        '''
         UPDATE usuario
         SET
           refresh_token = ?
         WHERE id_usuario = ?            
       
-      ''', [refreshToken, userId]);
+      ''',
+        [refreshToken, userId],
+      );
     } on MySqlException catch (e, s) {
       log.error('Erro ao confirmar login', e, s);
       throw DatabaseException();
@@ -456,8 +494,9 @@ class UserRepository implements IUserRepository {
     try {
       conn = await connection.openConnection();
       await conn.query(
-          'update usuario set refresh_token = ? where id_usuario = ?',
-          [refreshToken, userId]);
+        'update usuario set refresh_token = ? where id_usuario = ?',
+        [refreshToken, userId],
+      );
     } on MySqlException catch (e, s) {
       log.error('Erro ao atualizar refresh token', e, s);
       throw DatabaseException();

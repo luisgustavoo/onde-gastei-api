@@ -16,24 +16,42 @@ abstract class IUserService {
   Future<User> findById(int id);
 
   Future<void> updateUserNameById(
-      int userId, UserUpdateNameInputModel userUpdateNameInputModel);
+    int userId,
+    UserUpdateNameInputModel userUpdateNameInputModel,
+  );
 
   Future<List<Category>> findCategoriesByUserId(int userId);
 
   Future<List<UserExpenseByPeriodViewModel>> findExpenseByPeriod(
-      int userId, DateTime initialDate, DateTime finalDate);
+    int userId,
+    DateTime initialDate,
+    DateTime finalDate,
+  );
 
   Future<List<UserExpensesByCategoriesViewModel>> findTotalExpensesByCategories(
-      int userId, DateTime initialDate, DateTime finalDate);
+    int userId,
+    DateTime initialDate,
+    DateTime finalDate,
+  );
 
   Future<List<UserCategoriesByPercentageViewModel>> findPercentageByCategories(
-      int userId, DateTime initialDate, DateTime finalDate);
+    int userId,
+    DateTime initialDate,
+    DateTime finalDate,
+  );
 
   Future<List<UserExpenseByPeriodViewModel>> findExpensesByCategories(
-      int userId, int categoryId, DateTime initialDate, DateTime finalDate);
+    int userId,
+    int categoryId,
+    DateTime initialDate,
+    DateTime finalDate,
+  );
 
   Future<String> confirmLogin(int userId, String accessToken);
 
   Future<RefreshTokenViewModel> refreshToken(
-      int userId, String accessToken, String refreshToken);
+    int userId,
+    String accessToken,
+    String refreshToken,
+  );
 }

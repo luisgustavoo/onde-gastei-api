@@ -35,7 +35,7 @@ void main() {
     service = MockUserService();
     authController = AuthController(service: service, log: log);
     request = MockShelfRequest();
-    load();
+    DotEnv(includePlatformEnvironment: true).load();
     registerFallbackValue(MockUserSaveInputModel());
     registerFallbackValue(MockUserLoginInputModel());
   });
@@ -44,7 +44,8 @@ void main() {
     test('Should createUser with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/create_user_request.json');
+        'modules/users/controller/fixture/create_user_request.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -66,7 +67,8 @@ void main() {
     test('Should createUser throws UserExistsException', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/create_user_request.json');
+        'modules/users/controller/fixture/create_user_request.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -83,15 +85,17 @@ void main() {
       expect(response.statusCode, 400);
       expect(responseData['message'], isNotEmpty);
       expect(
-          responseData['message'].toString().contains('Usuário já cadastrado'),
-          true);
+        responseData['message'].toString().contains('Usuário já cadastrado'),
+        true,
+      );
       verify(() => service.createUser(any())).called(1);
     });
 
     test('Should createUser throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/create_user_request.json');
+        'modules/users/controller/fixture/create_user_request.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -108,10 +112,11 @@ void main() {
       expect(response.statusCode, 500);
       expect(responseData['message'], isNotEmpty);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao cadastrar usuário'),
-          true);
+        responseData['message']
+            .toString()
+            .contains('Erro ao cadastrar usuário'),
+        true,
+      );
       verify(() => service.createUser(any())).called(1);
     });
   });
@@ -120,7 +125,8 @@ void main() {
     test('Should login with succes', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/login_request.json');
+        'modules/users/controller/fixture/login_request.json',
+      );
       final userExpected = User(
         id: 1,
         name: 'Luis Gustavo',
@@ -147,7 +153,8 @@ void main() {
     test('Should login throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/create_user_request.json');
+        'modules/users/controller/fixture/create_user_request.json',
+      );
 
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
@@ -164,8 +171,9 @@ void main() {
       expect(response.statusCode, 500);
       expect(responseData['message'], isNotEmpty);
       expect(
-          responseData['message'].toString().contains('Erro ao realizar login'),
-          true);
+        responseData['message'].toString().contains('Erro ao realizar login'),
+        true,
+      );
       verify(() => service.login(any())).called(1);
     });
   });
@@ -216,7 +224,8 @@ void main() {
       //Arrange
       const userId = 1;
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/refresh_token_request.json');
+        'modules/users/controller/fixture/refresh_token_request.json',
+      );
       final accessToken = JwtHelper.generateJwt(userId);
       final refreshToken = JwtHelper.generateJwt(userId);
 
@@ -229,10 +238,13 @@ void main() {
           .thenAnswer((_) async => dataRequestFixture);
 
       when(() => service.refreshToken(any(), any(), any())).thenAnswer(
-          (_) async => RefreshTokenViewModel(
-              accessToken: accessToken, refreshToken: refreshToken));
+        (_) async => RefreshTokenViewModel(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        ),
+      );
       //Act
-      final response = await authController.refresToken(request);
+      final response = await authController.refreshToken(request);
 
       //Assert
       final responseData =
@@ -241,9 +253,13 @@ void main() {
       expect(responseData['access_token'], isNotEmpty);
       expect(responseData['refresh_token'], isNotEmpty);
       expect(
-          responseData['access_token'].toString().contains(accessToken), true);
-      expect(responseData['refresh_token'].toString().contains(refreshToken),
-          true);
+        responseData['access_token'].toString().contains(accessToken),
+        true,
+      );
+      expect(
+        responseData['refresh_token'].toString().contains(refreshToken),
+        true,
+      );
       verify(() => service.refreshToken(any(), any(), any())).called(1);
     });
 
@@ -251,7 +267,8 @@ void main() {
       //Arrange
       const userId = 1;
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/users/controller/fixture/refresh_token_request.json');
+        'modules/users/controller/fixture/refresh_token_request.json',
+      );
       final accessToken = JwtHelper.generateJwt(userId);
 
       when(() => request.headers).thenReturn(<String, String>{
@@ -265,7 +282,7 @@ void main() {
       when(() => service.refreshToken(any(), any(), any()))
           .thenThrow(Exception());
       //Act
-      final response = await authController.refresToken(request);
+      final response = await authController.refreshToken(request);
 
       //Assert
       final responseData =
@@ -273,10 +290,11 @@ void main() {
 
       expect(response.statusCode, 500);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao atualizar access token'),
-          true);
+        responseData['message']
+            .toString()
+            .contains('Erro ao atualizar access token'),
+        true,
+      );
       verify(() => service.refreshToken(any(), any(), any())).called(1);
     });
   });

@@ -84,11 +84,13 @@ void main() {
       const email = 'luisgustavovieirasantos@gmail.com';
       const password = '123132';
       final userExpect = User(
-          id: 1,
-          name: 'Luis Gustavo',
-          email: 'luisgustavovieirasantos@gmail.com');
+        id: 1,
+        name: 'Luis Gustavo',
+        email: 'luisgustavovieirasantos@gmail.com',
+      );
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/login_with_email_password_success.json');
+        'modules/users/data/fixture/login_with_email_password_success.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
 
@@ -137,11 +139,13 @@ void main() {
       // Arrange
       const userId = 1;
       final userExpect = User(
-          id: 1,
-          name: 'Luis Gustavo',
-          email: 'luisgustavovieirasantos@gmail.com');
+        id: 1,
+        name: 'Luis Gustavo',
+        email: 'luisgustavovieirasantos@gmail.com',
+      );
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_by_id_success.json');
+        'modules/users/data/fixture/find_by_id_success.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
 
@@ -188,16 +192,18 @@ void main() {
       // Arrange
       const userId = 1;
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_categories_by_user_id_success.json');
+        'modules/users/data/fixture/find_categories_by_user_id_success.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
       final categoriesExpect = <Category>[
         Category(
-            id: 1,
-            description: 'Supermercado',
-            iconCode: 59553,
-            colorCode: 4278190080,
-            userId: userId),
+          id: 1,
+          description: 'Supermercado',
+          iconCode: 59553,
+          colorCode: 4278190080,
+          userId: userId,
+        ),
       ];
 
       //Act
@@ -243,24 +249,30 @@ void main() {
       final initialDate = DateTime.parse('2021-09-28');
       final finalDate = DateTime.parse('2021-09-28');
       final expensesExpected = UserExpenseByPeriodViewModel(
-          expenseId: 1,
-          description: 'Compra no supermercado',
-          value: 150.5,
-          date: DateTime.parse('2021-09-28T00:00:00.000Z'),
-          category: Category(
-              id: 2,
-              description: 'Supermercado',
-              iconCode: 59553,
-              colorCode: 4293128957));
+        expenseId: 1,
+        description: 'Compra no supermercado',
+        value: 150.5,
+        date: DateTime.parse('2021-09-28T00:00:00.000Z'),
+        category: Category(
+          id: 2,
+          description: 'Supermercado',
+          iconCode: 59553,
+          colorCode: 4293128957,
+        ),
+      );
 
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_expense_by_userid_and_period.json');
+        'modules/users/data/fixture/find_expense_by_userid_and_period.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
 
       //Act
       final expense = await userRepository.findExpenseByPeriod(
-          userId, initialDate, finalDate);
+        userId,
+        initialDate,
+        finalDate,
+      );
       //Assert
       expect(expense[0], expensesExpected);
       expect(expense[0], isA<UserExpenseByPeriodViewModel>());
@@ -276,7 +288,10 @@ void main() {
       database.mockQuery(mockResults);
       //Act
       final expense = await userRepository.findExpenseByPeriod(
-          userId, initialDate, finalDate);
+        userId,
+        initialDate,
+        finalDate,
+      );
 
       //Assert
       expect(expense, <UserExpenseByPeriodViewModel>[]);
@@ -294,8 +309,10 @@ void main() {
       final call = userRepository.findExpenseByPeriod;
 
       //Assert
-      expect(call(userId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
+      expect(
+        call(userId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
@@ -317,7 +334,8 @@ void main() {
         ),
       );
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_total_expense_by_categories_success.json');
+        'modules/users/data/fixture/find_total_expense_by_categories_success.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
       //Act
@@ -356,8 +374,10 @@ void main() {
       final call = userRepository.findTotalExpensesByCategories;
 
       //Assert
-      expect(call(userId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
+      expect(
+        call(userId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
@@ -370,7 +390,8 @@ void main() {
       final initialDate = DateTime.parse('2021-09-28');
       final finalDate = DateTime.parse('2021-09-28');
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_percentage_by_categories_success.json');
+        'modules/users/data/fixture/find_percentage_by_categories_success.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
       final userCategoriesPercentageExpected =
@@ -421,8 +442,10 @@ void main() {
       final call = userRepository.findPercentageByCategories;
 
       //Assert
-      expect(call(userId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
+      expect(
+        call(userId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
 
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
@@ -437,24 +460,31 @@ void main() {
       final initialDate = DateTime.parse('2021-09-28');
       final finalDate = DateTime.parse('2021-09-28');
       final expensesExpected = UserExpenseByPeriodViewModel(
-          expenseId: 1,
-          description: 'Compra no supermercado',
-          value: 150.5,
-          date: DateTime.parse('2021-09-28T00:00:00.000Z'),
-          category: Category(
-              id: 2,
-              description: 'Supermercado',
-              iconCode: 59553,
-              colorCode: 4293128957));
+        expenseId: 1,
+        description: 'Compra no supermercado',
+        value: 150.5,
+        date: DateTime.parse('2021-09-28T00:00:00.000Z'),
+        category: Category(
+          id: 2,
+          description: 'Supermercado',
+          iconCode: 59553,
+          colorCode: 4293128957,
+        ),
+      );
 
       final jsonData = FixtureReader.getJsonData(
-          'modules/users/data/fixture/find_expenses_by_category_success.json');
+        'modules/users/data/fixture/find_expenses_by_category_success.json',
+      );
       final mockResults = MockResults(jsonData);
       database.mockQuery(mockResults);
 
       //Act
       final expense = await userRepository.findExpensesByCategories(
-          userId, categoryId, initialDate, finalDate);
+        userId,
+        categoryId,
+        initialDate,
+        finalDate,
+      );
       //Assert
       expect(expense[0], expensesExpected);
       expect(expense[0], isA<UserExpenseByPeriodViewModel>());
@@ -471,7 +501,11 @@ void main() {
       database.mockQuery(mockResults);
       //Act
       final expenseByCategories = await userRepository.findExpensesByCategories(
-          userId, categoryId, initialDate, finalDate);
+        userId,
+        categoryId,
+        initialDate,
+        finalDate,
+      );
 
       //Assert
       expect(expenseByCategories, <UserExpensesByCategoriesViewModel>[]);
@@ -489,8 +523,10 @@ void main() {
       final call = userRepository.findExpensesByCategories;
 
       //Assert
-      expect(call(userId, categoryId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
+      expect(
+        call(userId, categoryId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
 
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();

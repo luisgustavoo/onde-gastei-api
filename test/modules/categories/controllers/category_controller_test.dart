@@ -39,7 +39,8 @@ void main() {
     test('Should createCategory with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/categories/controllers/fixture/create_category_request.json');
+        'modules/categories/controllers/fixture/create_category_request.json',
+      );
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
       when(() => service.createCategory(any())).thenAnswer((_) async => 1);
@@ -57,7 +58,8 @@ void main() {
     test('Should throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/categories/controllers/fixture/create_category_request.json');
+        'modules/categories/controllers/fixture/create_category_request.json',
+      );
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
 
@@ -70,10 +72,11 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 500);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao cadastrar categoria'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Erro ao cadastrar categoria'),
+        isTrue,
+      );
       verify(() => service.createCategory(any())).called(1);
     });
   });
@@ -82,7 +85,8 @@ void main() {
     test('Should updateCategoryById with succes', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/categories/controllers/fixture/update_category_by_id_request.json');
+        'modules/categories/controllers/fixture/update_category_by_id_request.json',
+      );
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
 
@@ -96,17 +100,19 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 200);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Categoria atualizado com sucesso'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Categoria atualizado com sucesso'),
+        isTrue,
+      );
       verify(() => service.updateCategoryById(any(), any())).called(1);
     });
 
     test('Should throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-          'modules/categories/controllers/fixture/update_category_by_id_request.json');
+        'modules/categories/controllers/fixture/update_category_by_id_request.json',
+      );
       when(() => request.readAsString())
           .thenAnswer((_) async => dataRequestFixture);
 
@@ -122,10 +128,11 @@ void main() {
 
       expect(response.statusCode, 500);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao atualizar categoria'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Erro ao atualizar categoria'),
+        isTrue,
+      );
       verify(() => service.updateCategoryById(any(), any())).called(1);
     });
   });
@@ -142,10 +149,11 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 200);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Categoria deletada com sucesso'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Categoria deletada com sucesso'),
+        isTrue,
+      );
       verify(() => service.deleteCategoryById(any())).called(1);
     });
 
@@ -160,10 +168,11 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 500);
       expect(
-          responseData['message']
-              .toString()
-              .contains('Erro ao deletar categoria'),
-          isTrue);
+        responseData['message']
+            .toString()
+            .contains('Erro ao deletar categoria'),
+        isTrue,
+      );
       verify(() => service.deleteCategoryById(any())).called(1);
     });
   });

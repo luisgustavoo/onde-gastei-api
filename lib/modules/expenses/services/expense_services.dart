@@ -16,7 +16,9 @@ class ExpenseServices implements IExpenseServices {
 
   @override
   Future<void> updateExpenseById(
-          int expenseId, ExpenseUpdateInputModel expenseUpdateInputModel) =>
+    int expenseId,
+    ExpenseUpdateInputModel expenseUpdateInputModel,
+  ) =>
       repository.updateExpenseById(expenseId, expenseUpdateInputModel);
 
   @override

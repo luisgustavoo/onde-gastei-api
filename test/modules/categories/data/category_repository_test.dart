@@ -26,10 +26,11 @@ void main() {
       // Arrange
       const categoryId = 1;
       final categorySaveInputModel = CategorySaveInputModel(
-          description: 'Supermercado',
-          iconCode: 59553,
-          colorCode: 4278190080,
-          userId: 1);
+        description: 'Supermercado',
+        iconCode: 59553,
+        colorCode: 4278190080,
+        userId: 1,
+      );
       final mockResults = MockResults();
       when(() => mockResults.insertId).thenReturn(1);
       database.mockQuery(mockResults);
@@ -45,10 +46,11 @@ void main() {
     test('Should throws DatabaseException', () async {
       // Arrange
       final categorySaveInputModel = CategorySaveInputModel(
-          description: 'Supermercado',
-          iconCode: 59553,
-          colorCode: 4278190080,
-          userId: 1);
+        description: 'Supermercado',
+        iconCode: 59553,
+        colorCode: 4278190080,
+        userId: 1,
+      );
       final exception = MockMysqlException();
       database.mockQueryException(mockException: exception);
       //Act

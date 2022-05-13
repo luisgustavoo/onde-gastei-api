@@ -16,7 +16,8 @@ class CategoryRepository implements ICategoryRepository {
 
   @override
   Future<int> createCategory(
-      CategorySaveInputModel categorySaveInputModel) async {
+    CategorySaveInputModel categorySaveInputModel,
+  ) async {
     MySqlConnection? conn;
 
     try {
@@ -41,7 +42,9 @@ class CategoryRepository implements ICategoryRepository {
 
   @override
   Future<void> updateCategoryById(
-      int categoryId, CategoryUpdateInputModel categoryUpdateInputModel) async {
+    int categoryId,
+    CategoryUpdateInputModel categoryUpdateInputModel,
+  ) async {
     MySqlConnection? conn;
 
     try {
@@ -74,11 +77,14 @@ class CategoryRepository implements ICategoryRepository {
 
     try {
       conn = await connection.openConnection();
-      await conn.query('''
+      await conn.query(
+        '''
             DELETE FROM categoria 
             WHERE
                 id_categoria = ?          
-          ''', [categoryId]);
+          ''',
+        [categoryId],
+      );
     } on MySqlException catch (e, s) {
       log.error('Erro ao deletar categoria $categoryId', e, s);
       throw DatabaseException();

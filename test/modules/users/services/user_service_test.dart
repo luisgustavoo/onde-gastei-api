@@ -29,12 +29,13 @@ void main() {
   late ILog log;
   late IUserRepository userRepository;
   late UserService userService;
+  late DotEnv env;
 
   setUp(() {
     log = MockLogger();
     userRepository = MockUserRepository();
     userService = UserService(repository: userRepository, log: log);
-    load();
+    env = DotEnv(includePlatformEnvironment: true)..load();
   });
 
   group('Group test create user', () {
@@ -73,7 +74,9 @@ void main() {
 
       //Assert
       expect(
-          () => call(userSaveInputModel), throwsA(isA<UserExistsException>()));
+        () => call(userSaveInputModel),
+        throwsA(isA<UserExistsException>()),
+      );
       verify(() => userRepository.createUser(name, email, password)).called(1);
     });
 
@@ -132,8 +135,10 @@ void main() {
       final call = userService.login;
 
       //Assert
-      expect(() => call(userLoginInputModel),
-          throwsA(isA<UserNotFoundException>()));
+      expect(
+        () => call(userLoginInputModel),
+        throwsA(isA<UserNotFoundException>()),
+      );
       verify(() => userRepository.login(email, password)).called(1);
     });
 
@@ -152,7 +157,9 @@ void main() {
 
       //Assert
       expect(
-          () => call(userLoginInputModel), throwsA(isA<DatabaseException>()));
+        () => call(userLoginInputModel),
+        throwsA(isA<DatabaseException>()),
+      );
       verify(() => userRepository.login(email, password)).called(1);
     });
   });
@@ -270,17 +277,22 @@ void main() {
           date: DateTime.now(),
           value: 1,
           category: Category(
-              id: 1,
-              description: 'Bla bla',
-              iconCode: 1,
-              colorCode: 1,
-              userId: 1),
+            id: 1,
+            description: 'Bla bla',
+            iconCode: 1,
+            colorCode: 1,
+            userId: 1,
+          ),
         )
       ];
 
-      when(() => userRepository.findExpenseByPeriod(
-              userId, initialDate, finalDate))
-          .thenAnswer((_) async => userExpenseByPeriodListExpected);
+      when(
+        () => userRepository.findExpenseByPeriod(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => userExpenseByPeriodListExpected);
 
       //Act
       final userExpenseByPeriodList =
@@ -288,8 +300,13 @@ void main() {
 
       //Assert
       expect(userExpenseByPeriodList, userExpenseByPeriodListExpected);
-      verify(() => userRepository.findExpenseByPeriod(
-          userId, initialDate, finalDate)).called(1);
+      verify(
+        () => userRepository.findExpenseByPeriod(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findExpenseByPeriod empty', () async {
@@ -298,9 +315,13 @@ void main() {
       final initialDate = DateTime.now();
       final finalDate = DateTime.now();
 
-      when(() => userRepository.findExpenseByPeriod(
-              userId, initialDate, finalDate))
-          .thenAnswer((_) async => <UserExpenseByPeriodViewModel>[]);
+      when(
+        () => userRepository.findExpenseByPeriod(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => <UserExpenseByPeriodViewModel>[]);
 
       //Act
       final userExpenseByPeriodList =
@@ -308,8 +329,13 @@ void main() {
 
       //Assert
       expect(userExpenseByPeriodList, <UserExpenseByPeriodViewModel>[]);
-      verify(() => userRepository.findExpenseByPeriod(
-          userId, initialDate, finalDate)).called(1);
+      verify(
+        () => userRepository.findExpenseByPeriod(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findExpenseByPeriod DatabaseException', () async {
@@ -318,17 +344,29 @@ void main() {
       final initialDate = DateTime.now();
       final finalDate = DateTime.now();
 
-      when(() => userRepository.findExpenseByPeriod(
-          userId, initialDate, finalDate)).thenThrow(DatabaseException());
+      when(
+        () => userRepository.findExpenseByPeriod(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenThrow(DatabaseException());
 
       //Act
       final call = userService.findExpenseByPeriod;
 
       //Assert
-      expect(() => call(userId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
-      verify(() => userRepository.findExpenseByPeriod(
-          userId, initialDate, finalDate)).called(1);
+      expect(
+        () => call(userId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
+      verify(
+        () => userRepository.findExpenseByPeriod(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
   });
 
@@ -343,13 +381,22 @@ void main() {
         UserExpensesByCategoriesViewModel(
           totalValue: 1,
           category: Category(
-              id: 1, description: 'Test', iconCode: 1, colorCode: 1, userId: 1),
+            id: 1,
+            description: 'Test',
+            iconCode: 1,
+            colorCode: 1,
+            userId: 1,
+          ),
         )
       ];
 
-      when(() => userRepository.findTotalExpensesByCategories(
-              userId, initialDate, finalDate))
-          .thenAnswer((_) async => userExpensesByCategoriesListExpected);
+      when(
+        () => userRepository.findTotalExpensesByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => userExpensesByCategoriesListExpected);
 
       //Act
       final userExpensesByCategoriesList = await userService
@@ -357,9 +404,16 @@ void main() {
 
       //Assert
       expect(
-          userExpensesByCategoriesList, userExpensesByCategoriesListExpected);
-      verify(() => userRepository.findTotalExpensesByCategories(
-          userId, initialDate, finalDate)).called(1);
+        userExpensesByCategoriesList,
+        userExpensesByCategoriesListExpected,
+      );
+      verify(
+        () => userRepository.findTotalExpensesByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findTotalExpensesByCategories empty', () async {
@@ -368,9 +422,13 @@ void main() {
       final initialDate = DateTime.now();
       final finalDate = DateTime.now();
 
-      when(() => userRepository.findTotalExpensesByCategories(
-              userId, initialDate, finalDate))
-          .thenAnswer((_) async => <UserExpensesByCategoriesViewModel>[]);
+      when(
+        () => userRepository.findTotalExpensesByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => <UserExpensesByCategoriesViewModel>[]);
 
       //Act
       final userExpensesByCategoriesList = await userService
@@ -378,9 +436,16 @@ void main() {
 
       //Assert
       expect(
-          userExpensesByCategoriesList, <UserExpensesByCategoriesViewModel>[]);
-      verify(() => userRepository.findTotalExpensesByCategories(
-          userId, initialDate, finalDate)).called(1);
+        userExpensesByCategoriesList,
+        <UserExpensesByCategoriesViewModel>[],
+      );
+      verify(
+        () => userRepository.findTotalExpensesByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findTotalExpensesByCategories DatabaseException', () async {
@@ -389,17 +454,29 @@ void main() {
       final initialDate = DateTime.now();
       final finalDate = DateTime.now();
 
-      when(() => userRepository.findTotalExpensesByCategories(
-          userId, initialDate, finalDate)).thenThrow(DatabaseException());
+      when(
+        () => userRepository.findTotalExpensesByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenThrow(DatabaseException());
 
       //Act
       final call = userService.findTotalExpensesByCategories;
 
       //Assert
-      expect(() => call(userId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
-      verify(() => userRepository.findTotalExpensesByCategories(
-          userId, initialDate, finalDate)).called(1);
+      expect(
+        () => call(userId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
+      verify(
+        () => userRepository.findTotalExpensesByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
   });
 
@@ -423,19 +500,30 @@ void main() {
         )
       ];
 
-      when(() => userRepository.findPercentageByCategories(
-              userId, initialDate, finalDate))
-          .thenAnswer((_) async => userCategoriesByPercentageListExpected);
+      when(
+        () => userRepository.findPercentageByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => userCategoriesByPercentageListExpected);
 
       //Act
       final userCategoriesByPercentageList = await userService
           .findPercentageByCategories(userId, initialDate, finalDate);
 
       //Assert
-      expect(userCategoriesByPercentageList,
-          userCategoriesByPercentageListExpected);
-      verify(() => userRepository.findPercentageByCategories(
-          userId, initialDate, finalDate)).called(1);
+      expect(
+        userCategoriesByPercentageList,
+        userCategoriesByPercentageListExpected,
+      );
+      verify(
+        () => userRepository.findPercentageByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findPercentageByCategories empty', () async {
@@ -444,19 +532,30 @@ void main() {
       final initialDate = DateTime.now();
       final finalDate = DateTime.now();
 
-      when(() => userRepository.findPercentageByCategories(
-              userId, initialDate, finalDate))
-          .thenAnswer((_) async => <UserCategoriesByPercentageViewModel>[]);
+      when(
+        () => userRepository.findPercentageByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => <UserCategoriesByPercentageViewModel>[]);
 
       //Act
       final userCategoriesByPercentageList = await userService
           .findPercentageByCategories(userId, initialDate, finalDate);
 
       //Assert
-      expect(userCategoriesByPercentageList,
-          <UserCategoriesByPercentageViewModel>[]);
-      verify(() => userRepository.findPercentageByCategories(
-          userId, initialDate, finalDate)).called(1);
+      expect(
+        userCategoriesByPercentageList,
+        <UserCategoriesByPercentageViewModel>[],
+      );
+      verify(
+        () => userRepository.findPercentageByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findPercentageByCategories DatabaseException', () async {
@@ -465,17 +564,29 @@ void main() {
       final initialDate = DateTime.now();
       final finalDate = DateTime.now();
 
-      when(() => userRepository.findPercentageByCategories(
-          userId, initialDate, finalDate)).thenThrow(DatabaseException());
+      when(
+        () => userRepository.findPercentageByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenThrow(DatabaseException());
 
       //Act
       final call = userService.findPercentageByCategories;
 
       //Assert
-      expect(() => call(userId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
-      verify(() => userRepository.findPercentageByCategories(
-          userId, initialDate, finalDate)).called(1);
+      expect(
+        () => call(userId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
+      verify(
+        () => userRepository.findPercentageByCategories(
+          userId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
   });
 
@@ -494,17 +605,23 @@ void main() {
           date: DateTime.now(),
           value: 1,
           category: Category(
-              id: 1,
-              description: 'Bla bla',
-              iconCode: 1,
-              colorCode: 1,
-              userId: 1),
+            id: 1,
+            description: 'Bla bla',
+            iconCode: 1,
+            colorCode: 1,
+            userId: 1,
+          ),
         )
       ];
 
-      when(() => userRepository.findExpensesByCategories(
-              userId, categoryId, initialDate, finalDate))
-          .thenAnswer((_) async => userExpenseByPeriodListExpected);
+      when(
+        () => userRepository.findExpensesByCategories(
+          userId,
+          categoryId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => userExpenseByPeriodListExpected);
 
       //Act
       final userExpenseByPeriodList = await userService
@@ -512,8 +629,14 @@ void main() {
 
       //Assert
       expect(userExpenseByPeriodList, userExpenseByPeriodListExpected);
-      verify(() => userRepository.findExpensesByCategories(
-          userId, categoryId, initialDate, finalDate)).called(1);
+      verify(
+        () => userRepository.findExpensesByCategories(
+          userId,
+          categoryId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findExpensesByCategories empty', () async {
@@ -523,9 +646,14 @@ void main() {
       final finalDate = DateTime.now();
       const categoryId = 1;
 
-      when(() => userRepository.findExpensesByCategories(
-              userId, categoryId, initialDate, finalDate))
-          .thenAnswer((_) async => <UserExpenseByPeriodViewModel>[]);
+      when(
+        () => userRepository.findExpensesByCategories(
+          userId,
+          categoryId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenAnswer((_) async => <UserExpenseByPeriodViewModel>[]);
 
       //Act
       final userExpenseByPeriodList = await userService
@@ -533,8 +661,14 @@ void main() {
 
       //Assert
       expect(userExpenseByPeriodList, <UserExpenseByPeriodViewModel>[]);
-      verify(() => userRepository.findExpensesByCategories(
-          userId, categoryId, initialDate, finalDate)).called(1);
+      verify(
+        () => userRepository.findExpensesByCategories(
+          userId,
+          categoryId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
 
     test('Should findExpensesByCategories DatabaseException', () async {
@@ -544,18 +678,31 @@ void main() {
       final finalDate = DateTime.now();
       const categoryId = 1;
 
-      when(() => userRepository.findExpensesByCategories(
-              userId, categoryId, initialDate, finalDate))
-          .thenThrow(DatabaseException());
+      when(
+        () => userRepository.findExpensesByCategories(
+          userId,
+          categoryId,
+          initialDate,
+          finalDate,
+        ),
+      ).thenThrow(DatabaseException());
 
       //Act
       final call = userService.findExpensesByCategories;
 
       //Assert
-      expect(() => call(userId, categoryId, initialDate, finalDate),
-          throwsA(isA<DatabaseException>()));
-      verify(() => userRepository.findExpensesByCategories(
-          userId, categoryId, initialDate, finalDate)).called(1);
+      expect(
+        () => call(userId, categoryId, initialDate, finalDate),
+        throwsA(isA<DatabaseException>()),
+      );
+      verify(
+        () => userRepository.findExpensesByCategories(
+          userId,
+          categoryId,
+          initialDate,
+          finalDate,
+        ),
+      ).called(1);
     });
   });
 
@@ -590,7 +737,9 @@ void main() {
 
       //Assert
       expect(
-          () => call(userId, accessToken), throwsA(isA<DatabaseException>()));
+        () => call(userId, accessToken),
+        throwsA(isA<DatabaseException>()),
+      );
       verify(() => userRepository.confirmLogin(userId, any())).called(1);
     });
   });
@@ -598,7 +747,7 @@ void main() {
   group('Group test refreshToken', () {
     test('Should refreshToken with success', () async {
       //Arrange
-      env['refresh_token_not_before_hours'] = '0';
+      env.map['refresh_token_not_before_hours'] = '0';
 
       const userId = 1;
       final accessToken = JwtHelper.generateJwt(userId);
@@ -620,7 +769,7 @@ void main() {
 
     test('Should throws ServiceException ', () async {
       //Arrange
-      env['refresh_token_not_before_hours'] = '0';
+      env.map['refresh_token_not_before_hours'] = '0';
 
       const userId = 1;
       const accessToken = 'Bla bla';
@@ -630,13 +779,15 @@ void main() {
       final call = userService.refreshToken;
 
       //Assert
-      expect(() => call(userId, accessToken, refreshToken),
-          throwsA(isA<ServiceException>()));
+      expect(
+        () => call(userId, accessToken, refreshToken),
+        throwsA(isA<ServiceException>()),
+      );
     });
 
     test('Should throws JwtException ', () async {
       //Arrange
-      env['refresh_token_not_before_hours'] = '0';
+      env.map['refresh_token_not_before_hours'] = '0';
 
       const userId = 1;
       final accessToken = JwtHelper.generateJwt(userId);
@@ -646,8 +797,10 @@ void main() {
       final call = userService.refreshToken;
 
       //Assert
-      expect(() => call(userId, accessToken, refreshToken),
-          throwsA(isA<ServiceException>()));
+      expect(
+        () => call(userId, accessToken, refreshToken),
+        throwsA(isA<ServiceException>()),
+      );
     });
   });
 }

@@ -26,19 +26,26 @@ class AuthController {
       final dataRequest =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final userInputModel = UserSaveInputModel(
-          name: dataRequest['name'].toString(),
-          email: dataRequest['email'].toString(),
-          password: dataRequest['password'].toString());
+        name: dataRequest['name'].toString(),
+        email: dataRequest['email'].toString(),
+        password: dataRequest['password'].toString(),
+      );
       final userId = await service.createUser(userInputModel);
-      return Response.ok(jsonEncode(
-          {'message': 'Cadastro realizado com sucesso! Id: $userId'}));
+      return Response.ok(
+        jsonEncode(
+          {'message': 'Cadastro realizado com sucesso! Id: $userId'},
+        ),
+      );
     } on UserExistsException {
-      return Response(400,
-          body: jsonEncode({'message': 'Usuário já cadastrado'}));
+      return Response(
+        400,
+        body: jsonEncode({'message': 'Usuário já cadastrado'}),
+      );
     } on Exception catch (e) {
       log.error('Erro ao cadastrar usuário', e);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao cadastrar usuário'}));
+        body: jsonEncode({'message': 'Erro ao cadastrar usuário'}),
+      );
     }
   }
 
@@ -49,13 +56,15 @@ class AuthController {
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
 
       final userLoginInputModel = UserLoginInputModel(
-          email: dataRequest['email'].toString(),
-          password: dataRequest['password'].toString());
+        email: dataRequest['email'].toString(),
+        password: dataRequest['password'].toString(),
+      );
 
       final user = await service.login(userLoginInputModel);
 
       return Response.ok(
-          jsonEncode({'access_token': JwtHelper.generateJwt(user.id)}));
+        jsonEncode({'access_token': JwtHelper.generateJwt(user.id)}),
+      );
     } on UserNotFoundException {
       return Response.forbidden(
         jsonEncode(
@@ -94,7 +103,7 @@ class AuthController {
   }
 
   @Route.put('/refresh')
-  Future<Response> refresToken(Request request) async {
+  Future<Response> refreshToken(Request request) async {
     try {
       final userId = int.parse(request.headers['user']!);
       final accessToken = request.headers['access_token']!;

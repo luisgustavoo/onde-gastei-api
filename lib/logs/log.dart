@@ -4,10 +4,12 @@ import 'package:onde_gastei_api/logs/i_log.dart';
 class Log implements ILog {
   Log() {
     var release = true;
-    assert(() {
-      release = false;
-      return true;
-    }());
+    assert(
+      () {
+        release = false;
+        return true;
+      }(),
+    );
 
     _logger = Logger(
       filter: release ? ProductionFilter() : DevelopmentFilter(),

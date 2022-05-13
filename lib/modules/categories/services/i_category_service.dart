@@ -5,7 +5,9 @@ abstract class ICategoryService {
   Future<int> createCategory(CategorySaveInputModel categorySaveInputModel);
 
   Future<void> updateCategoryById(
-      int categoryId, CategoryUpdateInputModel categoryUpdateInputModel);
+    int categoryId,
+    CategoryUpdateInputModel categoryUpdateInputModel,
+  );
 
   Future<void> deleteCategoryById(int categoryId);
 }

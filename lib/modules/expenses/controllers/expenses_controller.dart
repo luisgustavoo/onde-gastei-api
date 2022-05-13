@@ -33,12 +33,16 @@ class ExpensesController {
 
       final expenseId = await service.createExpense(expenseSaveInputModel);
 
-      return Response.ok(jsonEncode(
-          {'message': 'Despesa criada com sucesso expenseId: $expenseId'}));
+      return Response.ok(
+        jsonEncode(
+          {'message': 'Despesa criada com sucesso expenseId: $expenseId'},
+        ),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao salvar despesa', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao salvar despesa'}));
+        body: jsonEncode({'message': 'Erro ao salvar despesa'}),
+      );
     }
   }
 
@@ -56,28 +60,34 @@ class ExpensesController {
       );
 
       await service.updateExpenseById(
-          int.parse(expenseId.toString()), expenseUpdateInputModel);
+        int.parse(expenseId),
+        expenseUpdateInputModel,
+      );
 
       return Response.ok(
-          jsonEncode({'message': 'Despesa atualizada com sucesso'}));
+        jsonEncode({'message': 'Despesa atualizada com sucesso'}),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao atualizar despesa', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao atualizar despesa'}));
+        body: jsonEncode({'message': 'Erro ao atualizar despesa'}),
+      );
     }
   }
 
   @Route.delete('/<expenseId|[0-9]+>/delete')
   Future<Response> deleteExpenseById(Request request, String expenseId) async {
     try {
-      await service.deleteExpenseById(int.parse(expenseId.toString()));
+      await service.deleteExpenseById(int.parse(expenseId));
 
       return Response.ok(
-          jsonEncode({'message': 'Despesa deletada com sucesso'}));
+        jsonEncode({'message': 'Despesa deletada com sucesso'}),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao deletar despesa', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao deletar despesa'}));
+        body: jsonEncode({'message': 'Erro ao deletar despesa'}),
+      );
     }
   }
 

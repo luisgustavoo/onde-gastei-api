@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:injectable/injectable.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/categories/services/i_category_service.dart';
@@ -31,51 +32,66 @@ class CategoryController {
 
       final categoryId = await service.createCategory(categorySaveInputModel);
 
-      return Response.ok(jsonEncode(
-          {'message': 'Categoria criada com sucesso id:$categoryId'}));
+      return Response.ok(
+        jsonEncode(
+          {'message': 'Categoria criada com sucesso id:$categoryId'},
+        ),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao cadastrar categoria', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao cadastrar categoria'}));
+        body: jsonEncode({'message': 'Erro ao cadastrar categoria'}),
+      );
     }
   }
 
   @Route.put('/<categoryId|[0-9]+>/update')
   Future<Response> updateCategoryById(
-      Request request, String categoryId) async {
+    Request request,
+    String categoryId,
+  ) async {
     try {
       final requestData =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
 
       final categoryUpdateInputModel = CategoryUpdateInputModel(
-          description: requestData['descricao'].toString(),
-          iconCode: int.parse(requestData['codigo_icone'].toString()),
-          colorCode: int.parse(requestData['codigo_cor'].toString()));
+        description: requestData['descricao'].toString(),
+        iconCode: int.parse(requestData['codigo_icone'].toString()),
+        colorCode: int.parse(requestData['codigo_cor'].toString()),
+      );
 
       await service.updateCategoryById(
-          int.parse(categoryId.toString()), categoryUpdateInputModel);
+        int.parse(categoryId),
+        categoryUpdateInputModel,
+      );
 
       return Response.ok(
-          jsonEncode({'message': 'Categoria atualizado com sucesso'}));
+        jsonEncode({'message': 'Categoria atualizado com sucesso'}),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao atualizar categoria', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao atualizar categoria'}));
+        body: jsonEncode({'message': 'Erro ao atualizar categoria'}),
+      );
     }
   }
 
   @Route.delete('/<categoryId|[0-9]+>/delete')
   Future<Response> deleteCategoryById(
-      Request request, String categoryId) async {
+    Request request,
+    String categoryId,
+  ) async {
     try {
-      await service.deleteCategoryById(int.parse(categoryId.toString()));
+      await service.deleteCategoryById(int.parse(categoryId));
 
       return Response.ok(
-          jsonEncode({'message': 'Categoria deletada com sucesso'}));
+        jsonEncode({'message': 'Categoria deletada com sucesso'}),
+      );
     } on Exception catch (e, s) {
       log.error('Erro ao deletar categoria $categoryId', e, s);
       return Response.internalServerError(
-          body: jsonEncode({'message': 'Erro ao deletar categoria'}));
+        body: jsonEncode({'message': 'Erro ao deletar categoria'}),
+      );
     }
   }
 
