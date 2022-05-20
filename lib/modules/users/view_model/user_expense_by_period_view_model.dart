@@ -9,12 +9,14 @@ class UserExpenseByPeriodViewModel {
     required this.value,
     required this.date,
     required this.category,
+    this.local,
   });
 
   final int expenseId;
   final String description;
   final double value;
   final DateTime date;
+  final String? local;
   final Category category;
 
   @override
@@ -26,6 +28,7 @@ class UserExpenseByPeriodViewModel {
           description == other.description &&
           value == other.value &&
           date == other.date &&
+          local == other.local &&
           category == other.category;
 
   @override
@@ -34,5 +37,6 @@ class UserExpenseByPeriodViewModel {
       description.hashCode ^
       value.hashCode ^
       date.hashCode ^
+      local.hashCode ^
       category.hashCode;
 }

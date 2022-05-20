@@ -103,6 +103,7 @@ class UserController {
               'descricao': d.description,
               'valor': d.value,
               'data': d.date.toIso8601String(),
+              'local': d.local,
               'categoria': {
                 'id_categoria': d.category.id,
                 'descricao': d.category.description,
@@ -231,6 +232,7 @@ class UserController {
               'descricao': d.description,
               'valor': d.value,
               'data': d.date.toIso8601String(),
+              'local': d.local,
               'categoria': {
                 'id_categoria': d.category.id,
                 'descricao': d.category.description,

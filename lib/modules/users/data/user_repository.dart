@@ -204,6 +204,7 @@ class UserRepository implements IUserRepository {
               d.descricao,
               d.valor,
               d.data,
+              d.local,
               c.id_categoria,
               c.descricao as descricao_categoria,
               c.codigo_icone,
@@ -228,6 +229,7 @@ class UserRepository implements IUserRepository {
                 description: d['descricao'].toString(),
                 value: double.parse(d['valor'].toString()),
                 date: DateTime.parse(d['data'].toString()),
+                local: d['local'].toString(),
                 category: Category(
                   id: int.parse(d['id_categoria'].toString()),
                   description: d['descricao_categoria'].toString(),
