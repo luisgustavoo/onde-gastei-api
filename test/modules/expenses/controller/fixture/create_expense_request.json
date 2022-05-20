@@ -2,6 +2,7 @@
     "descricao": "Despesa com carro",
     "valor": 10,
     "data": "2021-09-28",
+    "local": "Test",
     "id_usuario": 11003,
     "id_categoria": 60001
 }
