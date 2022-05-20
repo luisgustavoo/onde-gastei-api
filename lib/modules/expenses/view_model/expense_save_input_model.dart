@@ -5,11 +5,13 @@ class ExpenseSaveInputModel {
     required this.date,
     required this.userId,
     required this.categoryId,
+    this.local,
   });
 
   final String description;
   final double value;
   final DateTime date;
+  final String? local;
   final int userId;
   final int categoryId;
 }

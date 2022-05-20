@@ -21,11 +21,12 @@ class ExpenseRepository implements IExpenseRepository {
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''
-        INSERT INTO despesa(descricao, valor, data, id_usuario, id_categoria) VALUES (?, ?, ?, ?,?);
+        INSERT INTO despesa(descricao, valor, data, local, id_usuario, id_categoria) VALUES (?, ?, ?, ?, ?,?);
       ''', [
         expenseSaveInputModel.description,
         expenseSaveInputModel.value,
         expenseSaveInputModel.date.toIso8601String(),
+        expenseSaveInputModel.local,
         expenseSaveInputModel.userId,
         expenseSaveInputModel.categoryId
       ]);
