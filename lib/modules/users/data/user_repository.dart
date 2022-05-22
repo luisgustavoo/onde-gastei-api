@@ -216,7 +216,7 @@ class UserRepository implements IUserRepository {
           WHERE
               d.id_usuario = ?
                   AND d.data BETWEEN ? AND ?      
-          ORDER BY d.data DESC
+          ORDER BY d.data DESC, d.id_despesa DESC
       ''',
         [userId, initialDate.toIso8601String(), finalDate.toIso8601String()],
       );
