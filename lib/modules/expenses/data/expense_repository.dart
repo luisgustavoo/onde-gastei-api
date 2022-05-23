@@ -55,6 +55,7 @@ class ExpenseRepository implements IExpenseRepository {
               descricao = ?,
               valor = ?,
               data = ?,
+              local = ?,
               id_categoria = ?
           WHERE
               id_despesa = ?      
@@ -62,6 +63,7 @@ class ExpenseRepository implements IExpenseRepository {
         expenseUpdateInputModel.description,
         expenseUpdateInputModel.value,
         expenseUpdateInputModel.date.toIso8601String(),
+        expenseUpdateInputModel.local,
         expenseUpdateInputModel.categoryId,
         expenseId
       ]);

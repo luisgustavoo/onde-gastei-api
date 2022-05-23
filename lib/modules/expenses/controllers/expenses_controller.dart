@@ -27,7 +27,7 @@ class ExpensesController {
         description: requestData['descricao'].toString(),
         value: double.parse(requestData['valor'].toString()),
         date: DateTime.parse(requestData['data'].toString()),
-        local: requestData['local'].toString(),
+        local: requestData['local'] as String?,
         userId: int.parse(requestData['id_usuario'].toString()),
         categoryId: int.parse(requestData['id_categoria'].toString()),
       );
@@ -57,6 +57,7 @@ class ExpensesController {
         description: requestData['descricao'].toString(),
         value: double.parse(requestData['valor'].toString()),
         date: DateTime.parse(requestData['data'].toString()),
+        local: requestData['local'] as String?,
         categoryId: int.parse(requestData['id_categoria'].toString()),
       );
 
