@@ -229,7 +229,7 @@ class UserRepository implements IUserRepository {
                 description: d['descricao'].toString(),
                 value: double.parse(d['valor'].toString()),
                 date: DateTime.parse(d['data'].toString()),
-                local: d['local'].toString(),
+                local: d['local'] as String?,
                 category: Category(
                   id: int.parse(d['id_categoria'].toString()),
                   description: d['descricao_categoria'].toString(),
