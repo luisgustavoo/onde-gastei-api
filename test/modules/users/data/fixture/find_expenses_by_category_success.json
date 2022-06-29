@@ -3,6 +3,7 @@
   "descricao": "Compra no supermercado",
   "valor": 150.5,
   "data": "2021-09-28T00:00:00.000Z",
+  "local": "Teste",
   "id_categoria": 2,
   "descricao_categoria": "Supermercado",
   "codigo_icone": 59553,

@@ -26,8 +26,7 @@ class UserService implements IUserService {
   Future<int> createUser(UserSaveInputModel userSaveInputModel) =>
       repository.createUser(
         userSaveInputModel.name,
-        userSaveInputModel.email,
-        userSaveInputModel.password,
+        userSaveInputModel.firebaseUserId,
       );
 
   @override

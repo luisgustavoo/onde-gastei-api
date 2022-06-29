@@ -5,7 +5,7 @@ import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_
 import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
 
 abstract class IUserRepository {
-  Future<int> createUser(String name, String email, String password);
+  Future<int> createUser(String name, String firebaseUserId);
 
   Future<User> login(String email, String password);
 

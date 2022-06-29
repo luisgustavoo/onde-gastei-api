@@ -33,8 +33,7 @@ void main() {
       // Arrange
       const userId = 1;
       const name = 'Luis Gustavo';
-      const email = 'luisgustavovieirasantos@gmail.com';
-      const password = '123132';
+      const uid = '123132';
 
       final mockResults = MockResults();
 
@@ -42,7 +41,7 @@ void main() {
       database.mockQuery(mockResults);
 
       //Act
-      final user = await userRepository.createUser(name, email, password);
+      final user = await userRepository.createUser(name, uid);
 
       //Assert
       expect(user, userId);
@@ -52,29 +51,28 @@ void main() {
     test('Should throw DatabaseException', () async {
       // Arrange
       const name = 'Luis Gustavo';
-      const email = 'luisgustavovieirasantos@gmail.com';
-      const password = '123132';
+      const uid = '123132';
       database.mockQueryException();
 
       //Act
       final call = userRepository.createUser;
 
       //Assert
-      expect(call(name, email, password), throwsA(isA<DatabaseException>()));
+      expect(call(name, uid), throwsA(isA<DatabaseException>()));
     });
 
     test('Should throw UserExistsException', () async {
       // Arrange
       const name = 'Luis Gustavo';
-      const email = 'luisgustavovieirasantos@gmail.com';
-      const password = '123132';
+      const firebaseUserId = '123132';
       final exception = MockMysqlException();
-      when(() => exception.message).thenReturn('usuario.email_UNIQUE');
+      when(() => exception.message)
+          .thenReturn('usuario.id_usuario_firebase_UNIQUE');
       database.mockQueryException(mockException: exception);
       //Act
       final call = userRepository.createUser;
       //Assert
-      expect(call(name, email, password), throwsA(isA<UserExistsException>()));
+      expect(call(name, firebaseUserId), throwsA(isA<UserExistsException>()));
     });
   });
 
@@ -253,6 +251,7 @@ void main() {
         description: 'Compra no supermercado',
         value: 150.5,
         date: DateTime.parse('2021-09-28T00:00:00.000Z'),
+        local: 'Teste',
         category: Category(
           id: 2,
           description: 'Supermercado',
@@ -464,6 +463,7 @@ void main() {
         description: 'Compra no supermercado',
         value: 150.5,
         date: DateTime.parse('2021-09-28T00:00:00.000Z'),
+        local: 'Teste',
         category: Category(
           id: 2,
           description: 'Supermercado',

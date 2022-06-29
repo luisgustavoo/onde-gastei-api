@@ -26,9 +26,8 @@ class AuthController {
       final dataRequest =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
       final userInputModel = UserSaveInputModel(
-        name: dataRequest['name'].toString(),
-        email: dataRequest['email'].toString(),
-        password: dataRequest['password'].toString(),
+        name: dataRequest['nome'].toString(),
+        firebaseUserId: dataRequest['id_usuario_firebase'].toString(),
       );
       final userId = await service.createUser(userInputModel);
       return Response.ok(

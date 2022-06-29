@@ -42,12 +42,11 @@ void main() {
     test('Should create user with success', () async {
       //Arrange
       const name = 'Bla bla';
-      const email = 'blabla@teste.com';
-      const password = '123456';
+      const firebaseUserId = '123456';
       final userSaveInputModel =
-          UserSaveInputModel(name: name, email: email, password: password);
+          UserSaveInputModel(name: name, firebaseUserId: firebaseUserId);
 
-      when(() => userRepository.createUser(name, email, password))
+      when(() => userRepository.createUser(name, firebaseUserId))
           .thenAnswer((_) async => 1);
 
       //Act
@@ -55,18 +54,17 @@ void main() {
 
       //Assert
       expect(userId, 1);
-      verify(() => userRepository.createUser(name, email, password)).called(1);
+      verify(() => userRepository.createUser(name, firebaseUserId)).called(1);
     });
 
     test('Should throws UserExistsException', () async {
       //Arrange
       const name = 'Bla bla';
-      const email = 'blabla@teste.com';
-      const password = '123456';
+      const firebaseUserId = '123456';
       final userSaveInputModel =
-          UserSaveInputModel(name: name, email: email, password: password);
+          UserSaveInputModel(name: name, firebaseUserId: firebaseUserId);
 
-      when(() => userRepository.createUser(name, email, password))
+      when(() => userRepository.createUser(name, firebaseUserId))
           .thenThrow(UserExistsException());
 
       //Act
@@ -77,18 +75,17 @@ void main() {
         () => call(userSaveInputModel),
         throwsA(isA<UserExistsException>()),
       );
-      verify(() => userRepository.createUser(name, email, password)).called(1);
+      verify(() => userRepository.createUser(name, firebaseUserId)).called(1);
     });
 
     test('Should throws DatabaseException', () async {
       //Arrange
       const name = 'Bla bla';
-      const email = 'blabla@teste.com';
-      const password = '123456';
+      const firebaseUserId = '123456';
       final userSaveInputModel =
-          UserSaveInputModel(name: name, email: email, password: password);
+          UserSaveInputModel(name: name, firebaseUserId: firebaseUserId);
 
-      when(() => userRepository.createUser(name, email, password))
+      when(() => userRepository.createUser(name, firebaseUserId))
           .thenThrow(DatabaseException());
 
       //Act
@@ -96,7 +93,7 @@ void main() {
 
       //Assert
       expect(() => call(userSaveInputModel), throwsA(isA<DatabaseException>()));
-      verify(() => userRepository.createUser(name, email, password)).called(1);
+      verify(() => userRepository.createUser(name, firebaseUserId)).called(1);
     });
   });
 

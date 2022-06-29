@@ -21,21 +21,21 @@ class UserRepository implements IUserRepository {
   final ILog log;
 
   @override
-  Future<int> createUser(String name, String email, String password) async {
+  Future<int> createUser(String name, String firebaseUserId) async {
     MySqlConnection? conn;
 
     try {
       conn = await connection.openConnection();
       final result = await conn.query(
         '''
-          insert into usuario(nome, email, senha) values (?, ?, ?)
+          insert into usuario(nome, id_usuario_firebase) values (?, ?)
       ''',
-        [name, email, CriptyHelper.generateSha256Hash(password)],
+        [name, firebaseUserId],
       );
 
       return result.insertId ?? 0;
     } on MySqlException catch (e, s) {
-      if (e.message.contains('usuario.email_UNIQUE')) {
+      if (e.message.contains('usuario.id_usuario_firebase_UNIQUE')) {
         log.error('Usuario já cadastrado na base de dados', e, s);
         throw UserExistsException();
       }
