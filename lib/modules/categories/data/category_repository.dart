@@ -23,7 +23,7 @@ class CategoryRepository implements ICategoryRepository {
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''
-          INSERT INTO categoria (descricao, codigo_icone, codigo_cor, id_usuario) VALUES (?,?,?,?)
+          INSERT INTO tab_categorias (descricao, codigo_icone, codigo_cor, id_usuario) VALUES (?,?,?,?)
       ''', [
         categorySaveInputModel.description,
         categorySaveInputModel.iconCode,
@@ -50,7 +50,7 @@ class CategoryRepository implements ICategoryRepository {
     try {
       conn = await connection.openConnection();
       await conn.query('''
-        UPDATE categoria 
+        UPDATE tab_categorias
         SET 
             descricao = ?,
             codigo_icone = ?,
@@ -79,7 +79,7 @@ class CategoryRepository implements ICategoryRepository {
       conn = await connection.openConnection();
       await conn.query(
         '''
-            DELETE FROM categoria 
+            DELETE FROM tab_categorias
             WHERE
                 id_categoria = ?          
           ''',

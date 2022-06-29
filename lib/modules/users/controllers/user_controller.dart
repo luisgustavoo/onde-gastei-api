@@ -26,7 +26,11 @@ class UserController {
 
       return Response.ok(
         jsonEncode(
-          {'id_usuario': user.id, 'nome': user.name, 'email': user.email},
+          {
+            'id_usuario': user.id,
+            'nome': user.name,
+            'id_usuario_firebase': user.firebaseUserId
+          },
         ),
       );
     } on UserNotFoundException {

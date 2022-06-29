@@ -6,7 +6,6 @@ import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
 import 'package:onde_gastei_api/helpers/jwt_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
-import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -54,12 +53,9 @@ class AuthController {
       final dataRequest =
           jsonDecode(await request.readAsString()) as Map<String, dynamic>;
 
-      final userLoginInputModel = UserLoginInputModel(
-        email: dataRequest['email'].toString(),
-        password: dataRequest['password'].toString(),
-      );
+      final firebaseUserId = dataRequest['id_usuario_firebase'].toString();
 
-      final user = await service.login(userLoginInputModel);
+      final user = await service.login(firebaseUserId);
 
       return Response.ok(
         jsonEncode({'access_token': JwtHelper.generateJwt(user.id)}),
@@ -67,7 +63,7 @@ class AuthController {
     } on UserNotFoundException {
       return Response.forbidden(
         jsonEncode(
-          {'message': 'Usuário e senha inválidos'},
+          {'message': 'Id do Firebase inválido'},
         ),
       );
     } on Exception catch (e, s) {

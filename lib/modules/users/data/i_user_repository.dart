@@ -7,7 +7,7 @@ import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_catego
 abstract class IUserRepository {
   Future<int> createUser(String name, String firebaseUserId);
 
-  Future<User> login(String email, String password);
+  Future<User> login(String firebaseUserId);
 
   Future<User> findById(int id);
 

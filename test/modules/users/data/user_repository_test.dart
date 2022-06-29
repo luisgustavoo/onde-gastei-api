@@ -79,12 +79,13 @@ void main() {
   group('Group test login', () {
     test('Should login success', () async {
       // Arrange
-      const email = 'luisgustavovieirasantos@gmail.com';
-      const password = '123132';
+
+      const firebaseUserId = '123456';
+
       final userExpect = User(
         id: 1,
         name: 'Luis Gustavo',
-        email: 'luisgustavovieirasantos@gmail.com',
+        firebaseUserId: '123456',
       );
       final jsonData = FixtureReader.getJsonData(
         'modules/users/data/fixture/login_with_email_password_success.json',
@@ -93,7 +94,7 @@ void main() {
       database.mockQuery(mockResults);
 
       //Act
-      final user = await userRepository.login(email, password);
+      final user = await userRepository.login(firebaseUserId);
 
       //Assert
       expect(user, userExpect);
@@ -102,23 +103,23 @@ void main() {
 
     test('Should throw DatabaseException', () async {
       // Arrange
-      const name = 'Luis Gustavo';
-      const email = 'luisgustavovieirasantos@gmail.com';
+      const firebaseUserId = '123456';
       database.mockQueryException();
 
       //Act
       final call = userRepository.login;
 
       //Assert
-      expect(call(name, email), throwsA(isA<DatabaseException>()));
+      expect(call(firebaseUserId), throwsA(isA<DatabaseException>()));
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
 
     test('Should throw UserNotFoundException', () async {
       // Arrange
-      const name = 'Luis Gustavo';
-      const email = 'luisgustavovieirasantos@gmail.com';
+
+      const firebaseUserId = '123456';
+
       final mockResults = MockResults();
       database.mockQuery(mockResults);
 
@@ -126,7 +127,7 @@ void main() {
       final call = userRepository.login;
 
       //Assert
-      expect(call(name, email), throwsA(isA<UserNotFoundException>()));
+      expect(call(firebaseUserId), throwsA(isA<UserNotFoundException>()));
       await Future<void>.delayed(const Duration(milliseconds: 200));
       database.verifyConnectionClose();
     });
@@ -139,7 +140,7 @@ void main() {
       final userExpect = User(
         id: 1,
         name: 'Luis Gustavo',
-        email: 'luisgustavovieirasantos@gmail.com',
+        firebaseUserId: '123456',
       );
       final jsonData = FixtureReader.getJsonData(
         'modules/users/data/fixture/find_by_id_success.json',

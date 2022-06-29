@@ -21,7 +21,7 @@ class ExpenseRepository implements IExpenseRepository {
     try {
       conn = await connection.openConnection();
       final result = await conn.query('''
-        INSERT INTO despesa(descricao, valor, data, local, id_usuario, id_categoria) VALUES (?, ?, ?, ?, ?,?);
+        INSERT INTO tab_despesas(descricao, valor, data, local, id_usuario, id_categoria) VALUES (?, ?, ?, ?, ?,?);
       ''', [
         expenseSaveInputModel.description,
         expenseSaveInputModel.value,
@@ -50,7 +50,7 @@ class ExpenseRepository implements IExpenseRepository {
     try {
       conn = await connection.openConnection();
       await conn.query('''
-          UPDATE despesa 
+          UPDATE tab_despesas
           SET 
               descricao = ?,
               valor = ?,
@@ -83,7 +83,7 @@ class ExpenseRepository implements IExpenseRepository {
       conn = await connection.openConnection();
       await conn.query(
         '''
-        DELETE FROM despesa 
+        DELETE FROM tab_despesas
         WHERE
             id_despesa = ?   
       ''',

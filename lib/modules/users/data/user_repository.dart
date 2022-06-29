@@ -6,7 +6,6 @@ import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/exceptions/database_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
 import 'package:onde_gastei_api/exceptions/user_not_found_exception.dart';
-import 'package:onde_gastei_api/helpers/cripty_helper.dart';
 import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/data/i_user_repository.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_categories_by_percentage_view_model.dart';
@@ -28,8 +27,8 @@ class UserRepository implements IUserRepository {
       conn = await connection.openConnection();
       final result = await conn.query(
         '''
-          insert into usuario(nome, id_usuario_firebase) values (?, ?)
-      ''',
+          insert into tab_usuarios(nome, id_usuario_firebase) values (?, ?)
+        ''',
         [name, firebaseUserId],
       );
 
@@ -47,27 +46,27 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<User> login(String email, String password) async {
+  Future<User> login(String firebaseUserId) async {
     MySqlConnection? conn;
 
     try {
       conn = await connection.openConnection();
       final result = await conn.query(
         '''
-         select id_usuario, nome, email from usuario where email = ? and senha = ?
-      ''',
-        [email, CriptyHelper.generateSha256Hash(password)],
+         select id_usuario, nome, id_usuario_firebase from tab_usuarios where id_usuario_firebase = ?
+        ''',
+        [firebaseUserId],
       );
 
       if (result.isEmpty) {
-        log.error('usuario ou senha invalidos');
+        log.error('Id do Firebase invalido');
         throw UserNotFoundException();
       } else {
         final userData = result.first;
         return User(
           id: int.parse(userData['id_usuario'].toString()),
           name: userData['nome'].toString(),
-          email: userData['email'].toString(),
+          firebaseUserId: userData['id_usuario_firebase'].toString(),
         );
       }
     } on UserNotFoundException {
@@ -89,9 +88,9 @@ class UserRepository implements IUserRepository {
       final result = await conn.query(
         '''
       SELECT 
-          id_usuario, nome, email
+          id_usuario, nome, id_usuario_firebase
       FROM
-          usuario
+          tab_usuarios
       WHERE
           id_usuario = ?
       ''',
@@ -106,7 +105,7 @@ class UserRepository implements IUserRepository {
         return User(
           id: int.parse(mysqlData['id_usuario'].toString()),
           name: mysqlData['nome'].toString(),
-          email: mysqlData['email'].toString(),
+          firebaseUserId: mysqlData['id_usuario_firebase'].toString(),
         );
       }
     } on MySqlException catch (e, s) {
@@ -125,7 +124,7 @@ class UserRepository implements IUserRepository {
       conn = await connection.openConnection();
       await conn.query(
         '''
-        UPDATE usuario 
+        UPDATE tab_usuarios
         SET 
             nome = ?
         WHERE
@@ -156,7 +155,7 @@ class UserRepository implements IUserRepository {
             codigo_cor,
             id_usuario
         FROM
-            categoria
+            tab_categorias
         WHERE
             id_usuario = ?   
         ORDER BY descricao       
@@ -210,9 +209,9 @@ class UserRepository implements IUserRepository {
               c.codigo_icone,
               c.codigo_cor
           FROM
-              despesa d
+              tab_despesas d
                   INNER JOIN
-              categoria c ON (d.id_categoria = c.id_categoria)
+              tab_categorias c ON (d.id_categoria = c.id_categoria)
           WHERE
               d.id_usuario = ?
                   AND d.data BETWEEN ? AND ?      
@@ -266,9 +265,9 @@ class UserRepository implements IUserRepository {
               c.id_categoria, c.descricao, c.codigo_icone, 
               c.codigo_cor,  SUM(d.valor) AS valor_total
           FROM
-              despesa d
+              tab_despesas d
                   INNER JOIN
-              categoria c ON (d.id_categoria = c.id_categoria)
+              tab_categorias c ON (d.id_categoria = c.id_categoria)
           WHERE
               d.id_usuario = ?
                   AND d.data BETWEEN ? AND ?
@@ -342,8 +341,8 @@ class UserRepository implements IUserRepository {
                                     c.codigo_cor,
                                     SUM(d.valor) AS valor_total
                                 FROM
-                                    despesa d
-                                    INNER JOIN categoria c ON ( d.id_categoria = c.id_categoria and d.id_usuario = c.id_usuario)
+                                    tab_despesas d
+                                    INNER JOIN tab_categorias c ON ( d.id_categoria = c.id_categoria and d.id_usuario = c.id_usuario)
                                 WHERE
                                     d.id_usuario = ?
                                     AND d.data BETWEEN ? AND ?
@@ -423,9 +422,9 @@ class UserRepository implements IUserRepository {
               c.codigo_icone,
               c.codigo_cor
           FROM
-              despesa d
+              tab_despesas d
                   INNER JOIN
-              categoria c ON (d.id_categoria = c.id_categoria)
+              tab_categorias c ON (d.id_categoria = c.id_categoria)
           WHERE
               d.id_usuario = ?
                   AND c.id_categoria = ?
@@ -475,7 +474,7 @@ class UserRepository implements IUserRepository {
       conn = await connection.openConnection();
       await conn.query(
         '''
-        UPDATE usuario
+        UPDATE tab_usuarios
         SET
           refresh_token = ?
         WHERE id_usuario = ?            
@@ -498,7 +497,7 @@ class UserRepository implements IUserRepository {
     try {
       conn = await connection.openConnection();
       await conn.query(
-        'update usuario set refresh_token = ? where id_usuario = ?',
+        'update tab_usuarios set refresh_token = ? where id_usuario = ?',
         [refreshToken, userId],
       );
     } on MySqlException catch (e, s) {

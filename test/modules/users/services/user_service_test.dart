@@ -14,7 +14,6 @@ import 'package:onde_gastei_api/modules/users/view_model/refresh_token_view_mode
 import 'package:onde_gastei_api/modules/users/view_model/user_categories_by_percentage_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
-import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
@@ -101,31 +100,27 @@ void main() {
     test('Should login with success', () async {
       //Arrange
       const name = 'Bla bla';
-      const email = 'blabla@teste.com';
-      const password = '123456';
-      final userExpected = User(id: 1, name: name, email: email);
-      final userLoginInputModel =
-          UserLoginInputModel(email: email, password: password);
+      const firebaseUserId = '123456';
 
-      when(() => userRepository.login(email, password))
+      final userExpected =
+          User(id: 1, name: name, firebaseUserId: firebaseUserId);
+
+      when(() => userRepository.login(firebaseUserId))
           .thenAnswer((_) async => userExpected);
 
       //Act
-      final user = await userService.login(userLoginInputModel);
+      final user = await userService.login(firebaseUserId);
 
       //Assert
       expect(user, userExpected);
-      verify(() => userRepository.login(email, password)).called(1);
+      verify(() => userRepository.login(firebaseUserId)).called(1);
     });
 
     test('Should login throws UserNotFoundException', () async {
       //Arrange
-      const email = 'blabla@teste.com';
-      const password = '123456';
-      final userLoginInputModel =
-          UserLoginInputModel(email: email, password: password);
+      const firebaseUserId = '123456';
 
-      when(() => userRepository.login(email, password))
+      when(() => userRepository.login(firebaseUserId))
           .thenThrow(UserNotFoundException());
 
       //Act
@@ -133,20 +128,17 @@ void main() {
 
       //Assert
       expect(
-        () => call(userLoginInputModel),
+        () => call(firebaseUserId),
         throwsA(isA<UserNotFoundException>()),
       );
-      verify(() => userRepository.login(email, password)).called(1);
+      verify(() => userRepository.login(firebaseUserId)).called(1);
     });
 
     test('Should login throws DatabaseException', () async {
       //Arrange
-      const email = 'blabla@teste.com';
-      const password = '123456';
-      final userLoginInputModel =
-          UserLoginInputModel(email: email, password: password);
+      const firebaseUserId = '123456';
 
-      when(() => userRepository.login(email, password))
+      when(() => userRepository.login(firebaseUserId))
           .thenThrow(DatabaseException());
 
       //Act
@@ -154,10 +146,10 @@ void main() {
 
       //Assert
       expect(
-        () => call(userLoginInputModel),
+        () => call(firebaseUserId),
         throwsA(isA<DatabaseException>()),
       );
-      verify(() => userRepository.login(email, password)).called(1);
+      verify(() => userRepository.login(firebaseUserId)).called(1);
     });
   });
 
@@ -166,8 +158,9 @@ void main() {
       //Arrange
       const id = 1;
       const name = 'Bla bla';
-      const email = 'blabla@teste.com';
-      final userExpected = User(id: id, name: name, email: email);
+      const firebaseUserId = '123456';
+      final userExpected =
+          User(id: id, name: name, firebaseUserId: firebaseUserId);
 
       when(() => userRepository.findById(id))
           .thenAnswer((_) async => userExpected);

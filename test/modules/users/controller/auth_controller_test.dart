@@ -9,7 +9,6 @@ import 'package:onde_gastei_api/logs/i_log.dart';
 import 'package:onde_gastei_api/modules/users/controllers/auth_controller.dart';
 import 'package:onde_gastei_api/modules/users/services/i_user_service.dart';
 import 'package:onde_gastei_api/modules/users/view_model/refresh_token_view_model.dart';
-import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/expect.dart';
@@ -21,8 +20,6 @@ import '../../../core/shelf/mock_shelf_request.dart';
 import 'mock/mock_user_service.dart';
 
 class MockUserSaveInputModel extends Mock implements UserSaveInputModel {}
-
-class MockUserLoginInputModel extends Mock implements UserLoginInputModel {}
 
 void main() {
   late ILog log;
@@ -37,7 +34,6 @@ void main() {
     request = MockShelfRequest();
     DotEnv(includePlatformEnvironment: true).load();
     registerFallbackValue(MockUserSaveInputModel());
-    registerFallbackValue(MockUserLoginInputModel());
   });
 
   group('Group test createUser', () {
@@ -122,7 +118,7 @@ void main() {
   });
 
   group('Group test login', () {
-    test('Should login with succes', () async {
+    test('Should login with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
         'modules/users/controller/fixture/login_request.json',
@@ -130,7 +126,7 @@ void main() {
       final userExpected = User(
         id: 1,
         name: 'Luis Gustavo',
-        email: 'luisgustavovieirasantos@gmail.com',
+        firebaseUserId: '123456',
       );
 
       when(() => request.readAsString())

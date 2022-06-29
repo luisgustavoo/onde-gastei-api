@@ -4,14 +4,13 @@ import 'package:onde_gastei_api/modules/users/view_model/refresh_token_view_mode
 import 'package:onde_gastei_api/modules/users/view_model/user_categories_by_percentage_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expense_by_period_view_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_expenses_by_categories_view_model.dart';
-import 'package:onde_gastei_api/modules/users/view_model/user_login_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_save_input_model.dart';
 import 'package:onde_gastei_api/modules/users/view_model/user_update_name_input_model.dart';
 
 abstract class IUserService {
   Future<int> createUser(UserSaveInputModel userSaveInputModel);
 
-  Future<User> login(UserLoginInputModel userLoginInputModel);
+  Future<User> login(String firebaseUserId);
 
   Future<User> findById(int id);
 
