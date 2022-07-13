@@ -123,7 +123,8 @@ class UserController {
       log.error('Erro ao buscar despesas por período', e, s);
       return Response.internalServerError(
         body: jsonEncode(
-            {'message': 'Não foi possível buscar despesas por período'}),
+          {'message': 'Não foi possível buscar despesas por período'},
+        ),
       );
     }
   }
@@ -165,7 +166,8 @@ class UserController {
       log.error('Erro ao buscar despesas por categorias', e, s);
       return Response.internalServerError(
         body: jsonEncode(
-            {'message': 'Não foi possível buscar despesas por categorias'}),
+          {'message': 'Não foi possível buscar despesas por categorias'},
+        ),
       );
     }
   }
