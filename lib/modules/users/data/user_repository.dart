@@ -34,7 +34,7 @@ class UserRepository implements IUserRepository {
 
       return result.insertId ?? 0;
     } on MySqlException catch (e, s) {
-      if (e.message.contains('usuario.id_usuario_firebase_UNIQUE')) {
+      if (e.message.contains('tab_usuarios.id_usuario_firebase_UNIQUE')) {
         log.error('Usuario já cadastrado na base de dados', e, s);
         throw UserExistsException();
       }
