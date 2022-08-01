@@ -26,4 +26,8 @@ class CategoryService implements ICategoryService {
   @override
   Future<void> deleteCategoryById(int categoryId) =>
       repository.deleteCategoryById(categoryId);
+
+  @override
+  Future<int> expenseQuantityByCategoryId(int categoryId) =>
+      repository.expenseQuantityByCategoryId(categoryId);
 }

@@ -67,7 +67,7 @@ void main() {
       const firebaseUserId = '123132';
       final exception = MockMysqlException();
       when(() => exception.message)
-          .thenReturn('usuario.id_usuario_firebase_UNIQUE');
+          .thenReturn('tab_usuarios.id_usuario_firebase_UNIQUE');
       database.mockQueryException(mockException: exception);
       //Act
       final call = userRepository.createUser;

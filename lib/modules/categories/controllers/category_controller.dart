@@ -95,5 +95,30 @@ class CategoryController {
     }
   }
 
+  @Route.get('/<categoryId|[0-9]+>/expenses-quantity')
+  Future<Response> expenseQuantityByCategoryId(
+    Request request,
+    String categoryId,
+  ) async {
+    try {
+      final quantity =
+          await service.expenseQuantityByCategoryId(int.parse(categoryId));
+
+      return Response.ok(jsonEncode({'quantidade': quantity}));
+    } on Exception catch (e, s) {
+      log.error(
+        'Erro buscar quantidade de despesas da categoria $categoryId',
+        e,
+        s,
+      );
+      return Response.internalServerError(
+        body: jsonEncode({
+          'message':
+              'Erro buscar quantidade de despesas da categoria $categoryId'
+        }),
+      );
+    }
+  }
+
   Router get router => _$CategoryControllerRouter(this);
 }

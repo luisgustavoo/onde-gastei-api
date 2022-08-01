@@ -12,5 +12,7 @@ Router _$CategoryControllerRouter(CategoryController service) {
   router.add('PUT', r'/<categoryId|[0-9]+>/update', service.updateCategoryById);
   router.add(
       'DELETE', r'/<categoryId|[0-9]+>/delete', service.deleteCategoryById);
+  router.add('GET', r'/<categoryId|[0-9]+>/expenses-quantity',
+      service.expenseQuantityByCategoryId);
   return router;
 }

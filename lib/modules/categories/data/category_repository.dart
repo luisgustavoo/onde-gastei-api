@@ -77,6 +77,7 @@ class CategoryRepository implements ICategoryRepository {
 
     try {
       conn = await connection.openConnection();
+
       await conn.query(
         '''
             DELETE FROM tab_categorias
@@ -87,6 +88,38 @@ class CategoryRepository implements ICategoryRepository {
       );
     } on MySqlException catch (e, s) {
       log.error('Erro ao deletar categoria $categoryId', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
+
+  @override
+  Future<int> expenseQuantityByCategoryId(int categoryId) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+
+      final result = await conn.query(
+        '''
+          SELECT 
+            COUNT(1) AS quantidade
+          FROM
+              tab_despesas
+          WHERE
+              id_categoria = ?
+        ''',
+        [categoryId],
+      );
+
+      return int.parse(result.first['quantidade'].toString());
+    } on MySqlException catch (e, s) {
+      log.error(
+        'Erro buscar quantidade de despesas da categoria $categoryId',
+        e,
+        s,
+      );
       throw DatabaseException();
     } finally {
       await conn?.close();

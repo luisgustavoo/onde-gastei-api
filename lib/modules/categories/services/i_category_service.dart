@@ -10,4 +10,6 @@ abstract class ICategoryService {
   );
 
   Future<void> deleteCategoryById(int categoryId);
+
+  Future<int> expenseQuantityByCategoryId(int categoryId);
 }
