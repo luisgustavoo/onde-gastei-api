@@ -8,7 +8,6 @@ import 'package:onde_gastei_api/logs/log.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 class ApplicationConfig {
-
   late final DotEnv env;
 
   Future<void> loadConfigApplication(Router router) async {
@@ -30,7 +29,6 @@ class ApplicationConfig {
       env = DotEnv(includePlatformEnvironment: true)..load();
 
   void _loadDatabaseConfig() {
-
     final databaseConfig = DatabaseConnectionConfiguration(
       host: env['DATABASE_HOST'] ?? env['databaseHost']!,
       user: env['DATABASE_USER'] ?? env['databaseUser']!,
