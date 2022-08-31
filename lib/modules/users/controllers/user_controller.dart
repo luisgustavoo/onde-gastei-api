@@ -260,5 +260,23 @@ class UserController {
     }
   }
 
+  @Route.delete('/<userId|[0-9]+>')
+  Future<Response> deleteAccount(Request request, String userId) async {
+    try {
+      await service.deleteAccount(int.parse(userId));
+
+      return Response.ok(
+        jsonEncode(
+          {'message': 'Conta deletada com success'},
+        ),
+      );
+    } on Exception catch (e, s) {
+      log.error('Erro ao deletar conta', e, s);
+      return Response.internalServerError(
+        body: jsonEncode({'message': 'Erro ao deletar conta'}),
+      );
+    }
+  }
+
   Router get router => _$UserControllerRouter(this);
 }

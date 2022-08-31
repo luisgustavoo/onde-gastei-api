@@ -507,4 +507,40 @@ class UserRepository implements IUserRepository {
       await conn?.close();
     }
   }
+
+  @override
+  Future<void> deleteAccount(int userId) async {
+    MySqlConnection? conn;
+
+    try {
+      conn = await connection.openConnection();
+      await conn.transaction<void>((transaction) async {
+        await transaction.query(
+          '''
+            DELETE FROM tab_despesas WHERE id_usuario = ?            
+          ''',
+          [userId],
+        );
+
+        await transaction.query(
+          '''
+            DELETE FROM tab_categorias WHERE id_usuario = ?            
+          ''',
+          [userId],
+        );
+
+        await transaction.query(
+          '''
+            DELETE FROM tab_usuarios WHERE id_usuario = ?             
+          ''',
+          [userId],
+        );
+      });
+    } on MySqlException catch (e, s) {
+      log.error('Erro ao deletar conta', e, s);
+      throw DatabaseException();
+    } finally {
+      await conn?.close();
+    }
+  }
 }

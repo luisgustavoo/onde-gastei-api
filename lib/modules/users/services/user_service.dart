@@ -22,27 +22,28 @@ class UserService implements IUserService {
   final ILog log;
 
   @override
-  Future<int> createUser(UserSaveInputModel userSaveInputModel) =>
+  Future<int> createUser(UserSaveInputModel userSaveInputModel) async =>
       repository.createUser(
         userSaveInputModel.name,
         userSaveInputModel.firebaseUserId,
       );
 
   @override
-  Future<User> login(String firebaseUserId) => repository.login(firebaseUserId);
+  Future<User> login(String firebaseUserId) async =>
+      repository.login(firebaseUserId);
 
   @override
-  Future<User> findById(int id) => repository.findById(id);
+  Future<User> findById(int id) async => repository.findById(id);
 
   @override
   Future<void> updateUserNameById(
     int userId,
     UserUpdateNameInputModel userUpdateNameInputModel,
-  ) =>
+  ) async =>
       repository.updateUserNameById(userId, userUpdateNameInputModel.name);
 
   @override
-  Future<List<Category>> findCategoriesByUserId(int userId) =>
+  Future<List<Category>> findCategoriesByUserId(int userId) async =>
       repository.findCategoriesByUserId(userId);
 
   @override
@@ -50,7 +51,7 @@ class UserService implements IUserService {
     int userId,
     DateTime initialDate,
     DateTime finalDate,
-  ) =>
+  ) async =>
       repository.findExpenseByPeriod(userId, initialDate, finalDate);
 
   @override
@@ -58,7 +59,7 @@ class UserService implements IUserService {
     int userId,
     DateTime initialDate,
     DateTime finalDate,
-  ) =>
+  ) async =>
       repository.findTotalExpensesByCategories(userId, initialDate, finalDate);
 
   @override
@@ -66,7 +67,7 @@ class UserService implements IUserService {
     int userId,
     DateTime initialDate,
     DateTime finalDate,
-  ) =>
+  ) async =>
       repository.findPercentageByCategories(userId, initialDate, finalDate);
 
   @override
@@ -75,7 +76,7 @@ class UserService implements IUserService {
     int categoryId,
     DateTime initialDate,
     DateTime finalDate,
-  ) =>
+  ) async =>
       repository.findExpensesByCategories(
         userId,
         categoryId,
@@ -127,4 +128,8 @@ class UserService implements IUserService {
       throw const ServiceException('Erro ao validar refresh token');
     }
   }
+
+  @override
+  Future<void> deleteAccount(int userId) async =>
+      repository.deleteAccount(userId);
 }

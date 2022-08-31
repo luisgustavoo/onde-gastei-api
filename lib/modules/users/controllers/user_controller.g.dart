@@ -20,5 +20,6 @@ Router _$UserControllerRouter(UserController service) {
       service.findPercentageByCategories);
   router.add('GET', r'/<userId|[0-9]+>/expenses/categories/<categoryId|[0-9]+>',
       service.findExpensesByCategories);
+  router.add('DELETE', r'/<userId|[0-9]+>', service.deleteAccount);
   return router;
 }

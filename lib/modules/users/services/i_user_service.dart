@@ -53,4 +53,6 @@ abstract class IUserService {
     String accessToken,
     String refreshToken,
   );
+
+  Future<void> deleteAccount(int userId);
 }

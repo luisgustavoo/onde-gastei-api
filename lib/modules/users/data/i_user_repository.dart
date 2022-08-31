@@ -43,4 +43,6 @@ abstract class IUserRepository {
   Future<void> confirmLogin(int userId, String refreshToken);
 
   Future<void> updateRefreshToken(int userId, String refreshToken);
+
+  Future<void> deleteAccount(int userId);
 }
