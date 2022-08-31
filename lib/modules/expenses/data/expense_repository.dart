@@ -90,7 +90,7 @@ class ExpenseRepository implements IExpenseRepository {
         [expenseId],
       );
     } on MySqlException catch (e, s) {
-      log.error('Erro ao deletar despesa', e, s);
+      log.error('Erro ao excluir despesa', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();

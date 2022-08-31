@@ -267,13 +267,13 @@ class UserController {
 
       return Response.ok(
         jsonEncode(
-          {'message': 'Conta deletada com success'},
+          {'message': 'Conta excluída com success'},
         ),
       );
     } on Exception catch (e, s) {
-      log.error('Erro ao deletar conta', e, s);
+      log.error('Erro ao excluir conta', e, s);
       return Response.internalServerError(
-        body: jsonEncode({'message': 'Erro ao deletar conta'}),
+        body: jsonEncode({'message': 'Erro ao excluir conta'}),
       );
     }
   }

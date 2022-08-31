@@ -89,7 +89,7 @@ void main() {
     test('Should updateExpenseById with success', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-        'modules/expenses/controller/fixture/update_exepenses_by_id.json',
+        'modules/expenses/controller/fixture/update_expenses_by_id.json',
       );
 
       when(() => request.readAsString())
@@ -115,7 +115,7 @@ void main() {
     test('Should throws Exception', () async {
       //Arrange
       final dataRequestFixture = FixtureReader.getJsonData(
-        'modules/expenses/controller/fixture/update_exepenses_by_id.json',
+        'modules/expenses/controller/fixture/update_expenses_by_id.json',
       );
 
       when(() => request.readAsString())
@@ -139,7 +139,7 @@ void main() {
     });
   });
 
-  group('Geoup test deleteExpenseById', () {
+  group('Group test deleteExpenseById', () {
     test('Should deleteExpenseById with success', () async {
       //Arrange
       when(() => service.deleteExpenseById(any())).thenAnswer((_) async => _);
@@ -153,7 +153,7 @@ void main() {
       expect(
         responseData['message']
             .toString()
-            .contains('Despesa deletada com sucesso'),
+            .contains('Despesa excluída com sucesso'),
         isTrue,
       );
       verify(() => service.deleteExpenseById(any())).called(1);
@@ -170,7 +170,7 @@ void main() {
           jsonDecode(await response.readAsString()) as Map<String, dynamic>;
       expect(response.statusCode, 500);
       expect(
-        responseData['message'].toString().contains('Erro ao deletar despesa'),
+        responseData['message'].toString().contains('Erro ao excluir despesa'),
         isTrue,
       );
       verify(() => service.deleteExpenseById(any())).called(1);

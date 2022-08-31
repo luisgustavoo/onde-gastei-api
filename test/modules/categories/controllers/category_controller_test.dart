@@ -151,7 +151,7 @@ void main() {
       expect(
         responseData['message']
             .toString()
-            .contains('Categoria deletada com sucesso'),
+            .contains('Categoria excluída com sucesso'),
         isTrue,
       );
       verify(() => service.deleteCategoryById(any())).called(1);
@@ -170,7 +170,7 @@ void main() {
       expect(
         responseData['message']
             .toString()
-            .contains('Erro ao deletar categoria'),
+            .contains('Erro ao excluir categoria'),
         isTrue,
       );
       verify(() => service.deleteCategoryById(any())).called(1);

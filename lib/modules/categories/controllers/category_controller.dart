@@ -85,12 +85,12 @@ class CategoryController {
       await service.deleteCategoryById(int.parse(categoryId));
 
       return Response.ok(
-        jsonEncode({'message': 'Categoria deletada com sucesso'}),
+        jsonEncode({'message': 'Categoria excluída com sucesso'}),
       );
     } on Exception catch (e, s) {
-      log.error('Erro ao deletar categoria $categoryId', e, s);
+      log.error('Erro ao excluir categoria $categoryId', e, s);
       return Response.internalServerError(
-        body: jsonEncode({'message': 'Erro ao deletar categoria'}),
+        body: jsonEncode({'message': 'Erro ao excluir categoria'}),
       );
     }
   }

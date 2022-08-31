@@ -6,7 +6,6 @@ import 'package:onde_gastei_api/modules/categories/view_model/category_save_inpu
 import 'package:onde_gastei_api/modules/categories/view_model/category_update_input_model.dart';
 import 'package:test/test.dart';
 
-import '../../../core/fixture/fixture_reader.dart';
 import '../../../core/log/mock_logger.dart';
 import '../../../core/mysql/mock_database_connection.dart';
 import '../../../core/mysql/mock_mysql_exception.dart';

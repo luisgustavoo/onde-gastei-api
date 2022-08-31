@@ -83,12 +83,12 @@ class ExpensesController {
       await service.deleteExpenseById(int.parse(expenseId));
 
       return Response.ok(
-        jsonEncode({'message': 'Despesa deletada com sucesso'}),
+        jsonEncode({'message': 'Despesa excluída com sucesso'}),
       );
     } on Exception catch (e, s) {
-      log.error('Erro ao deletar despesa', e, s);
+      log.error('Erro ao excluir despesa', e, s);
       return Response.internalServerError(
-        body: jsonEncode({'message': 'Erro ao deletar despesa'}),
+        body: jsonEncode({'message': 'Erro ao excluir despesa'}),
       );
     }
   }

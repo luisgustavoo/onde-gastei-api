@@ -537,7 +537,7 @@ class UserRepository implements IUserRepository {
         );
       });
     } on MySqlException catch (e, s) {
-      log.error('Erro ao deletar conta', e, s);
+      log.error('Erro ao excluir conta', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();

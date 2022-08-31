@@ -87,7 +87,7 @@ class CategoryRepository implements ICategoryRepository {
         [categoryId],
       );
     } on MySqlException catch (e, s) {
-      log.error('Erro ao deletar categoria $categoryId', e, s);
+      log.error('Erro ao excluir categoria $categoryId', e, s);
       throw DatabaseException();
     } finally {
       await conn?.close();
