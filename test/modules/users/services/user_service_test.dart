@@ -170,7 +170,8 @@ void main() {
 
       //Assert
       expect(user, userExpected);
-      verify(() => userService.findById(id)).called(1);
+
+      verify(() => userRepository.findById(id)).called(1);
     });
 
     test('Should throws UserNotFoundException', () async {
