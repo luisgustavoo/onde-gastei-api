@@ -10,13 +10,19 @@ class DatabaseConnection implements IDatabaseConnection {
   final DatabaseConnectionConfiguration _configuration;
 
   @override
-  Future<MySqlConnection> openConnection() => MySqlConnection.connect(
-        ConnectionSettings(
-          host: _configuration.host,
-          user: _configuration.user,
-          port: _configuration.port,
-          password: _configuration.password,
-          db: _configuration.databaseName,
-        ),
-      );
+  Future<MySqlConnection> openConnection() async {
+    final connection = await MySqlConnection.connect(
+      ConnectionSettings(
+        host: _configuration.host,
+        user: _configuration.user,
+        port: _configuration.port,
+        password: _configuration.password,
+        db: _configuration.databaseName,
+      ),
+    );
+
+    await Future<void>.delayed(const Duration(seconds: 1));
+
+    return connection;
+  }
 }
