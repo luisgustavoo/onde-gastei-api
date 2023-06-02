@@ -21,6 +21,8 @@ class DatabaseConnection implements IDatabaseConnection {
       ),
     );
 
+    await Future<void>.delayed(const Duration(seconds: 1));
+
     return connection;
   }
 }
