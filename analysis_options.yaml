@@ -12,7 +12,7 @@
 # The core lints are also what is used by pub.dev for scoring packages.
 
 # include: package:lints/recommended.yaml
-include: package:strict/analysis_options.yaml
+include: package:hard_analyser/analysis_options.yaml
 
 analyzer:
   exclude: [ lib/**.g.dart, lib/**.config.dart ]
