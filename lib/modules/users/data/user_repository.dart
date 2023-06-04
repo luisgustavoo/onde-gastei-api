@@ -59,7 +59,7 @@ class UserRepository implements IUserRepository {
       );
 
       if (result.isEmpty) {
-        log.error('Id do Firebase invalido');
+        log.error('Id do Firebase inválido');
         throw UserNotFoundException();
       } else {
         final userData = result.first;

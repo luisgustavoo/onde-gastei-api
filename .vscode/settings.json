@@ -1,15 +1,3 @@
 {
-    "cSpell.words": [
-        "analyser",
-        "codigo",
-        "descricao",
-        "dotenv",
-        "gastei",
-        "icone",
-        "middlewares",
-        "mocktail",
-        "onde",
-        "usuario",
-        "usuarios"
-    ]
+    "dart.sdkPath": "/Users/luisgustavo/src/flutter/bin/cache/dart-sdk/bin",
 }
