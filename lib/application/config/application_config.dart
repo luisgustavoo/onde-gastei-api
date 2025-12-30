@@ -25,14 +25,14 @@ class ApplicationConfig {
 
   void _loadDatabaseConfig() {
     final databaseConfig = DatabaseConnectionConfiguration(
-      host: Platform.environment['DATABASE_HOST']!,
-      user: Platform.environment['DATABASE_USER']!,
-      password: Platform.environment['DATABASE_PASSWORD']!,
+      host: Platform.environment['DB_HOST']!,
+      user: Platform.environment['DB_USER']!,
+      password: Platform.environment['DB_PASSWORD']!,
       port: int.tryParse(
-            Platform.environment['DATABASE_PORT']!,
+            Platform.environment['DB_PORT']!,
           ) ??
           0,
-      databaseName: Platform.environment['DATABASE_NAME']!,
+      databaseName: Platform.environment['DB_NAME']!,
     );
 
     GetIt.I.registerSingleton(databaseConfig);
