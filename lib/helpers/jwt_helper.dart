@@ -1,12 +1,12 @@
-import 'package:dotenv/dotenv.dart';
+import 'dart:io';
+
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 
 class JwtHelper {
   JwtHelper._();
 
   static String generateJwt(int userId) {
-    final env = DotEnv(includePlatformEnvironment: true)..load();
-    final jwtSecret = env['JWT_SECRET'] ?? env['jwt_dev_secret']!;
+    final jwtSecret = Platform.environment['JWT_SECRET']!;
 
     final claimSet = JwtClaim(
       issuer: 'ondegastei',
@@ -21,22 +21,19 @@ class JwtHelper {
   }
 
   static JwtClaim getClaims(String token) {
-    final env = DotEnv(includePlatformEnvironment: true)..load();
-    final jwtSecret = env['JWT_SECRET'] ?? env['jwt_dev_secret']!;
+    final jwtSecret = Platform.environment['JWT_SECRET']!;
 
     return verifyJwtHS256Signature(token, jwtSecret);
   }
 
   static String refreshToken(String accessToken) {
-    final env = DotEnv(includePlatformEnvironment: true)..load();
-    final jwtSecret = env['JWT_SECRET'] ?? env['jwt_dev_secret']!;
+    final jwtSecret = Platform.environment['JWT_SECRET']!;
 
     final expiry = int.parse(
-      env['REFRESH_TOKEN_EXPIRED_DAYS'] ?? env['refresh_token_expired_days']!,
+      Platform.environment['REFRESH_TOKEN_EXPIRED_DAYS']!,
     );
     final notBefore = int.parse(
-      env['REFRESH_TOKEN_NOT_BEFORE_HOURS'] ??
-          env['refresh_token_not_before_hours']!,
+      Platform.environment['REFRESH_TOKEN_NOT_BEFORE_HOURS']!,
     );
 
     final claimSet = JwtClaim(

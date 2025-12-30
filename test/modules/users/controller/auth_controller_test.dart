@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:dotenv/dotenv.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/entities/user.dart';
 import 'package:onde_gastei_api/exceptions/user_exists_exception.dart';
@@ -32,7 +30,6 @@ void main() {
     service = MockUserService();
     authController = AuthController(service: service, log: log);
     request = MockShelfRequest();
-    DotEnv(includePlatformEnvironment: true).load();
     registerFallbackValue(MockUserSaveInputModel());
   });
 

@@ -1,4 +1,5 @@
-import 'package:dotenv/dotenv.dart';
+import 'dart:io';
+
 import 'package:get_it/get_it.dart';
 import 'package:onde_gastei_api/application/config/database_connection_configuration.dart';
 import 'package:onde_gastei_api/application/config/service_locator_config.dart';
@@ -8,10 +9,7 @@ import 'package:onde_gastei_api/logs/log.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 class ApplicationConfig {
-  late final DotEnv env;
-
   Future<void> loadConfigApplication(Router router) async {
-    await _loadEnv();
     _loadDependencies();
     _loadDatabaseConfig();
     _configLogger();
@@ -25,16 +23,16 @@ class ApplicationConfig {
 
   void _configLogger() => GetIt.I.registerLazySingleton<ILog>(Log.new);
 
-  Future<void> _loadEnv() async =>
-      env = DotEnv(includePlatformEnvironment: true)..load();
-
   void _loadDatabaseConfig() {
     final databaseConfig = DatabaseConnectionConfiguration(
-      host: env['DATABASE_HOST'] ?? env['databaseHost']!,
-      user: env['DATABASE_USER'] ?? env['databaseUser']!,
-      password: env['DATABASE_PASSWORD'] ?? env['databasePassword']!,
-      port: int.tryParse(env['DATABASE_PORT'] ?? env['databasePort']!) ?? 0,
-      databaseName: env['DATABASE_NAME'] ?? env['databaseName']!,
+      host: Platform.environment['DATABASE_HOST']!,
+      user: Platform.environment['DATABASE_USER']!,
+      password: Platform.environment['DATABASE_PASSWORD']!,
+      port: int.tryParse(
+            Platform.environment['DATABASE_PORT']!,
+          ) ??
+          0,
+      databaseName: Platform.environment['DATABASE_NAME']!,
     );
 
     GetIt.I.registerSingleton(databaseConfig);

@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   args: ^2.3.1
-  dotenv: ^4.0.1
+  # dotenv: ^4.0.1
   get_it: ^7.2.0
   injectable: ^1.5.3
   jaguar_jwt: ^3.0.0

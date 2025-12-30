@@ -1,4 +1,5 @@
-import 'package:dotenv/dotenv.dart';
+import 'dart:io';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
@@ -28,13 +29,11 @@ void main() {
   late ILog log;
   late IUserRepository userRepository;
   late UserService userService;
-  late DotEnv env;
 
   setUp(() {
     log = MockLogger();
     userRepository = MockUserRepository();
     userService = UserService(repository: userRepository, log: log);
-    env = DotEnv(includePlatformEnvironment: true)..load();
   });
 
   group('Group test create user', () {
@@ -738,8 +737,6 @@ void main() {
   group('Group test refreshToken', () {
     test('Should refreshToken with success', () async {
       //Arrange
-      env.map['refresh_token_not_before_hours'] = '0';
-
       const userId = 1;
       final accessToken = JwtHelper.generateJwt(userId);
       final refreshToken = JwtHelper.refreshToken(accessToken);
@@ -760,7 +757,6 @@ void main() {
 
     test('Should throws ServiceException ', () async {
       //Arrange
-      env.map['refresh_token_not_before_hours'] = '0';
 
       const userId = 1;
       const accessToken = 'Bla bla';
@@ -778,7 +774,6 @@ void main() {
 
     test('Should throws JwtException ', () async {
       //Arrange
-      env.map['refresh_token_not_before_hours'] = '0';
 
       const userId = 1;
       final accessToken = JwtHelper.generateJwt(userId);
