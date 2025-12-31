@@ -44,6 +44,6 @@ class JwtHelper {
       otherClaims: <String, dynamic>{},
     );
 
-    return 'Bearer ${issueJwtHS256(claimSet, jwtSecret)}';
+    return issueJwtHS256(claimSet, jwtSecret);
   }
 }

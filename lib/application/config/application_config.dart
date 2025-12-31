@@ -23,11 +23,27 @@ class ApplicationConfig {
 
   void _configLogger() => GetIt.I.registerLazySingleton<ILog>(Log.new);
 
+  String _loadSecret(String path) {
+    final file = File(path);
+    if (!file.existsSync()) {
+      throw StateError('Secret não encontrado em $path');
+    }
+
+    final content = file.readAsStringSync().trim();
+    if (content.isEmpty) {
+      throw StateError('Secret em $path está vazio');
+    }
+
+    return content;
+  }
+
   void _loadDatabaseConfig() {
+    final dbPassword = _loadSecret('/run/secrets/mysql_app_password');
+
     final databaseConfig = DatabaseConnectionConfiguration(
       host: Platform.environment['DB_HOST']!,
       user: Platform.environment['DB_USER']!,
-      password: Platform.environment['DB_PASSWORD']!,
+      password: dbPassword,
       port: int.tryParse(
             Platform.environment['DB_PORT']!,
           ) ??

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:injectable/injectable.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:onde_gastei_api/application/config/database_connection_configuration.dart';
@@ -10,13 +12,16 @@ class DatabaseConnection implements IDatabaseConnection {
   final DatabaseConnectionConfiguration _configuration;
 
   @override
-  Future<MySqlConnection> openConnection() => MySqlConnection.connect(
-        ConnectionSettings(
-          host: _configuration.host,
-          user: _configuration.user,
-          port: _configuration.port,
-          password: _configuration.password,
-          db: _configuration.databaseName,
-        ),
-      );
+  Future<MySqlConnection> openConnection() async {
+    return MySqlConnection.connect(
+      ConnectionSettings(
+        host: _configuration.host,
+        user: _configuration.user,
+        port: _configuration.port,
+        password: _configuration.password,
+        db: _configuration.databaseName,
+        timeout: const Duration(seconds: 10),
+      ),
+    );
+  }
 }
