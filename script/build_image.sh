@@ -1,0 +1,1 @@
+docker build --platform linux/amd64 -t luisgustavo7/ondegastei-api:1.0.2 .

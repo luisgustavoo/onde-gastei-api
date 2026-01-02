@@ -17,7 +17,7 @@ class JwtHelper {
       maxAge: const Duration(days: 1),
     );
 
-    return 'Bearer ${issueJwtHS256(claimSet, jwtSecret)}';
+    return issueJwtHS256(claimSet, jwtSecret);
   }
 
   static JwtClaim getClaims(String token) {

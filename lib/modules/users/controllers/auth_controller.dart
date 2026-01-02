@@ -86,8 +86,8 @@ class AuthController {
       return Response.ok(
         jsonEncode(
           <String, dynamic>{
-            'access_token': 'Bearer $accessToken',
-            'refresh_token': refreshToken
+            'access_token': accessToken,
+            'refresh_token': refreshToken,
           },
         ),
       );
