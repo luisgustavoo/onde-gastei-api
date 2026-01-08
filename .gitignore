@@ -7,5 +7,6 @@
 build/
 
 .key/
+
 docker-stack.yaml
 
