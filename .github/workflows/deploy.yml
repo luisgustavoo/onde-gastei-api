@@ -14,7 +14,9 @@ jobs:
 
       - name: Login Docker Hub
         run: |
-          echo docker login luisgustavo7
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login \
+            -u "${{ secrets.DOCKERHUB_USERNAME }}" \
+            --password-stdin
 
       - name: Extract version from pubspec
         id: version
@@ -25,11 +27,11 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t luisgustavo7/ondegastei-api:${VERSION} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}"/ondegastei-api:${VERSION} .
 
       - name: Push image
         run: |
-          docker push luisgustavo7/ondegastei-api:${VERSION}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}"/ondegastei-api:${VERSION}
 
       - name: Deploy Swarm
         run: |
