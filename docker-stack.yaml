@@ -1,0 +1,63 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0.36
+    command:
+      [
+        "--default-authentication-plugin=mysql_native_password",
+        "--skip-name-resolve",
+        "--max_allowed_packet=64M"
+      ]
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_app_password
+      TZ: America/Sao_Paulo
+    secrets:
+      - mysql_root_password
+      - mysql_app_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - api_net
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  api:
+    image: luisgustavo7/ondegastei-api:${VERSION}
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: app_user
+      DB_PASSWORD_FILE: /run/secrets/mysql_app_password
+      DB_NAME: app_db
+      REFRESH_TOKEN_EXPIRED_DAYS: 30
+      REFRESH_TOKEN_NOT_BEFORE_HOURS: 0
+      JWT_SECRET: Q2YGvbIHMCJoVlhg8LhCnelFjorwtk
+    secrets:
+      - mysql_app_password
+    ports:
+      - "8080:8080"
+    networks:
+      - api_net
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+volumes:
+  mysql_data:
+networks:
+  api_net:
+    driver: overlay
+secrets:
+  mysql_root_password:
+    external: true
+  mysql_app_password:
+    external: true

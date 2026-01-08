@@ -1,0 +1,38 @@
+name: CI/CD Swarm
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        run: |
+          echo docker login
+
+      - name: Extract version from pubspec
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d+ -f1)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version detected: $VERSION"
+
+      - name: Build image
+        run: |
+          docker build -t luisgustavo7/ondegastei-api:${VERSION} .
+
+      - name: Push image
+        run: |
+          docker push luisgustavo7/ondegastei-api:${VERSION}
+
+      - name: Deploy Swarm
+        run: |
+          docker stack deploy \
+            -c docker-stack.yml \
+            stack_api
