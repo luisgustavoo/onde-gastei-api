@@ -36,5 +36,5 @@ jobs:
       - name: Deploy Swarm
         run: |
           docker stack deploy \
-            -c docker-stack.yml \
+            -c docker-stack.yaml \
             stack_api
