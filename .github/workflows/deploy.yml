@@ -27,11 +27,11 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}"/ondegastei-api:${VERSION} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ondegastei-api:${VERSION} .
 
       - name: Push image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}"/ondegastei-api:${VERSION}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ondegastei-api:${VERSION}
 
       - name: Deploy Swarm
         run: |
