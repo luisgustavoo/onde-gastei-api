@@ -37,10 +37,10 @@ services:
       DB_NAME: app_db
       REFRESH_TOKEN_EXPIRED_DAYS: 30
       REFRESH_TOKEN_NOT_BEFORE_HOURS: 0
-      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      JWT_SECRET_FILE: /run/secrets/JWT_SECRET
     secrets:
       - mysql_app_password
-      - jwt_secret
+      - JWT_SECRET
     ports:
       - "8080:8080"
     networks:
@@ -62,5 +62,5 @@ secrets:
     external: true
   mysql_app_password:
     external: true
-  jwt_secret:
+  JWT_SECRET:
     external: true    
