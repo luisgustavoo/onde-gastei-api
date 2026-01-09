@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:mocktail/mocktail.dart';
 import 'package:onde_gastei_api/entities/category.dart';
 import 'package:onde_gastei_api/entities/user.dart';
@@ -208,7 +206,7 @@ void main() {
       //Arrange
       const userId = 1;
       final categoryListExpcted = [
-        Category(id: 1, description: 'Bla bla', iconCode: 123, colorCode: 123)
+        Category(id: 1, description: 'Bla bla', iconCode: 123, colorCode: 123),
       ];
 
       when(() => userRepository.findCategoriesByUserId(userId))
@@ -273,7 +271,7 @@ void main() {
             colorCode: 1,
             userId: 1,
           ),
-        )
+        ),
       ];
 
       when(
@@ -377,7 +375,7 @@ void main() {
             colorCode: 1,
             userId: 1,
           ),
-        )
+        ),
       ];
 
       when(
@@ -487,7 +485,7 @@ void main() {
             iconCode: 1,
             colorCode: 1,
           ),
-        )
+        ),
       ];
 
       when(
@@ -601,7 +599,7 @@ void main() {
             colorCode: 1,
             userId: 1,
           ),
-        )
+        ),
       ];
 
       when(

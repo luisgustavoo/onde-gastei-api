@@ -410,7 +410,8 @@ class UserRepository implements IUserRepository {
 
     try {
       conn = await connection.openConnection();
-      final result = await conn.query('''
+      final result = await conn.query(
+        '''
           SELECT 
               d.id_despesa,
               d.descricao,
@@ -430,12 +431,14 @@ class UserRepository implements IUserRepository {
                   AND c.id_categoria = ?
                   AND d.data BETWEEN ? AND ?      
           ORDER BY d.data DESC, d.id_despesa DESC
-      ''', [
-        userId,
-        categoryId,
-        initialDate.toIso8601String(),
-        finalDate.toIso8601String()
-      ]);
+      ''',
+        [
+          userId,
+          categoryId,
+          initialDate.toIso8601String(),
+          finalDate.toIso8601String(),
+        ],
+      );
 
       if (result.isNotEmpty) {
         return result

@@ -224,7 +224,7 @@ void main() {
 
       when(() => request.headers).thenReturn(<String, String>{
         'user': userId.toString(),
-        'access_token': accessToken
+        'access_token': accessToken,
       });
 
       when(() => request.readAsString())
@@ -266,7 +266,7 @@ void main() {
 
       when(() => request.headers).thenReturn(<String, String>{
         'user': userId.toString(),
-        'access_token': accessToken
+        'access_token': accessToken,
       });
 
       when(() => request.readAsString())
