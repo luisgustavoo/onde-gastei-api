@@ -37,7 +37,7 @@ services:
       DB_NAME: app_db
       REFRESH_TOKEN_EXPIRED_DAYS: 30
       REFRESH_TOKEN_NOT_BEFORE_HOURS: 0
-      JWT_SECRET: /run/secrets/JWT_SECRET
+      JWT_SECRET_FILE: /run/secrets/JWT_SECRET
     secrets:
       - mysql_app_password
       - JWT_SECRET
