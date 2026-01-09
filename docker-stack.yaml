@@ -62,3 +62,5 @@ secrets:
     external: true
   mysql_app_password:
     external: true
+  jwt_secret:
+    external: true    
